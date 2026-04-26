@@ -5,10 +5,10 @@ import { ConstitutionContent } from '@/lib/constitutions';
 
 /* ResultClient와 동일한 모노크롬 팔레트 */
 const GRADIENTS: Record<string, string> = {
-  soeum:   'linear-gradient(135deg, #d8d8d6 0%, #b8b8b5 50%, #989895 100%)',
-  soyang:  'linear-gradient(135deg, #909090 0%, #707070 50%, #545454 100%)',
-  taeeum:  'linear-gradient(135deg, #484644 0%, #2e2c2a 50%, #1a1918 100%)',
-  taeyang: 'linear-gradient(135deg, #1c1b1a 0%, #0e0d0c 50%, #060810 100%)',
+  soeum:   '#bdbdbb',
+  soyang:  '#6e6e6e',
+  taeeum:  '#2a2826',
+  taeyang: '#0e0d0c',
 };
 
 const TEXT_ON: Record<string, string> = {
@@ -41,7 +41,7 @@ const ShareCard = forwardRef<HTMLDivElement, { constitution: ConstitutionContent
           margin: '0 auto',
           borderRadius: '24px',
           overflow: 'hidden',
-          background: gradient,
+          backgroundColor: gradient,
           padding: '40px 32px',
           fontFamily: "'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif",
         }}

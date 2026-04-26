@@ -3,20 +3,16 @@ import Link from 'next/link';
 /* 소음=흰, 소양=연회, 태음=진회, 태양=검정 */
 const CARDS = [
   { name: '소음인', hanja: '少陰人', task: '기쁨의 기복을 다스리는 사람',
-    gradient: 'linear-gradient(135deg, #d8d8d6 0%, #b8b8b5 50%, #989895 100%)',
-    glow: '0 0 20px 4px rgba(255,255,255,0.10)',
+    bg: '#bdbdbb', glow: '0 0 20px 4px rgba(255,255,255,0.08)',
     textMain: '#111110', textSub: 'rgba(0,0,0,0.50)' },
   { name: '소양인', hanja: '少陽人', task: '슬픔을 다스리는 사람',
-    gradient: 'linear-gradient(135deg, #909090 0%, #707070 50%, #545454 100%)',
-    glow: '0 0 16px 3px rgba(200,200,200,0.07)',
+    bg: '#6e6e6e', glow: '0 0 14px 3px rgba(200,200,200,0.06)',
     textMain: '#ffffff', textSub: 'rgba(255,255,255,0.60)' },
   { name: '태음인', hanja: '太陰人', task: '탐닉을 다스리는 사람',
-    gradient: 'linear-gradient(135deg, #484644 0%, #2e2c2a 50%, #1a1918 100%)',
-    glow: '0 0 14px 3px rgba(100,100,100,0.06)',
+    bg: '#2a2826', glow: '0 0 12px 2px rgba(100,100,100,0.05)',
     textMain: 'rgba(255,255,255,0.92)', textSub: 'rgba(255,255,255,0.55)' },
   { name: '태양인', hanja: '太陽人', task: '분노를 다스리는 사람',
-    gradient: 'linear-gradient(135deg, #1c1b1a 0%, #0e0d0c 50%, #060810 100%)',
-    glow: '0 0 14px 3px rgba(255,255,255,0.05)',
+    bg: '#0e0d0c', glow: '0 0 12px 2px rgba(255,255,255,0.04)',
     textMain: 'rgba(255,255,255,0.92)', textSub: 'rgba(255,255,255,0.55)' },
 ];
 
@@ -60,19 +56,11 @@ export default function LandingPage() {
             key={c.name}
             className="rounded-[1rem] p-6 text-white relative overflow-hidden"
             style={{
-              background: c.gradient,
+              backgroundColor: c.bg,
               boxShadow: c.glow,
-              border: '1px solid rgba(255,255,255,0.15)',
+              border: '1px solid rgba(255,255,255,0.10)',
             }}
           >
-            {/* inner highlight */}
-            <div
-              style={{
-                position: 'absolute', inset: 0,
-                background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), transparent 55%)',
-                pointerEvents: 'none',
-              }}
-            />
             <p style={{ fontSize: '0.625rem', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem', position: 'relative', color: c.textSub }}>
               {c.hanja}
             </p>

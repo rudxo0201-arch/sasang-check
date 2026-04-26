@@ -15,10 +15,10 @@ import {
 /* ── 디자인 상수 (모노크롬 — 흰→연회→진회→검정) ── */
 /* 소음=흰, 소양=연회, 태음=진회, 태양=검정 */
 const GRADIENTS: Record<ConstitutionKey, string> = {
-  soeum:   'linear-gradient(135deg, #d8d8d6 0%, #b8b8b5 50%, #989895 100%)',
-  soyang:  'linear-gradient(135deg, #909090 0%, #707070 50%, #545454 100%)',
-  taeeum:  'linear-gradient(135deg, #484644 0%, #2e2c2a 50%, #1a1918 100%)',
-  taeyang: 'linear-gradient(135deg, #1c1b1a 0%, #0e0d0c 50%, #060810 100%)',
+  soeum:   '#bdbdbb',
+  soyang:  '#6e6e6e',
+  taeeum:  '#2a2826',
+  taeyang: '#0e0d0c',
 };
 
 /* 분포 바 / 단색 참조 */
@@ -85,15 +85,14 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
 
       {/* 1. 히어로 — 체질 그라데이션 + glow */}
       <div
-        className="w-full rounded-[1rem] p-8 text-white relative overflow-hidden"
-        style={{ background: grad, boxShadow: glow, border: '1px solid rgba(255,255,255,0.15)' }}
+        className="w-full rounded-[1rem] p-8"
+        style={{ backgroundColor: grad, boxShadow: glow, border: '1px solid rgba(255,255,255,0.10)' }}
       >
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), transparent 55%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'relative' }}>
-          <p className="text-eyebrow mb-5" style={{ color: textOn.sub, fontSize: '0.6875rem' }}>당신의 사상체질은</p>
-          <p style={{ fontSize: '1rem', letterSpacing: '0.12em', marginBottom: '0.375rem', fontWeight: 400, color: textOn.sub }}>{c.hanja}</p>
+        <div>
+          <p className="text-eyebrow mb-5" style={{ color: textOn.sub }}>당신의 사상체질은</p>
+          <p style={{ fontSize: '1.0625rem', letterSpacing: '0.1em', marginBottom: '0.5rem', fontWeight: 400, color: textOn.sub }}>{c.hanja}</p>
           <p className="text-display mb-4" style={{ color: textOn.main }}>{c.name}</p>
-          <p style={{ fontSize: '0.9375rem', lineHeight: 1.65, color: textOn.sub }}>{c.oneLiner}</p>
+          <p style={{ fontSize: '1rem', lineHeight: 1.7, color: textOn.sub }}>{c.oneLiner}</p>
           {tier && (
             <p className="mt-4 text-eyebrow" style={{ color: textOn.sub }}>
               {tierLabel(tier.tier, c.name, constitutions[tier.secondary].name)}
@@ -173,9 +172,8 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
       </div>
 
       {/* 4. 평생 과제 */}
-      <div className="w-full rounded-[1rem] p-8 text-center relative overflow-hidden" style={{ background: grad, boxShadow: glow, border: '1px solid rgba(255,255,255,0.15)' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), transparent 55%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'relative' }}>
+      <div className="w-full rounded-[1rem] p-8 text-center" style={{ backgroundColor: grad, boxShadow: glow, border: '1px solid rgba(255,255,255,0.10)' }}>
+        <div>
           <p className="text-eyebrow mb-5" style={{ color: textOn.sub, fontSize: '0.6875rem' }}>이제마 선생이 말씀하시길</p>
           <p style={{ fontSize: '1.375rem', fontWeight: 600, lineHeight: 1.4, marginBottom: '1rem', color: textOn.main }}>&ldquo;{c.lifeTask}&rdquo;</p>
           <p style={{ fontSize: '0.875rem', lineHeight: 1.7, color: textOn.sub }}>{c.lifeTaskDesc}</p>
@@ -284,11 +282,11 @@ function FBlock({ children, className = '' }: { children: React.ReactNode; class
 function Label({ children }: { children: React.ReactNode }) {
   return (
     <p style={{
-      fontSize: '0.75rem',
-      fontWeight: 600,
-      letterSpacing: '0.08em',
-      color: 'rgba(255,255,255,0.55)',
-      marginBottom: '0.75rem',
+      fontSize: '0.875rem',
+      fontWeight: 700,
+      letterSpacing: '0.04em',
+      color: 'rgba(255,255,255,0.70)',
+      marginBottom: '0.875rem',
     }}>
       {children}
     </p>
@@ -301,13 +299,13 @@ function Tags({ items, color }: { items: string[]; color?: string }) {
       {items.map((item) => (
         <span
           key={item}
-          className="px-2.5 py-1 rounded-full"
+          className="px-3 py-1 rounded-full"
           style={{
-            fontSize: '0.6875rem',
-            border: '1px solid rgba(255,255,255,0.12)',
-            color: color ?? 'rgba(255,255,255,0.38)',
+            fontSize: '0.8125rem',
+            border: '1px solid rgba(255,255,255,0.18)',
+            color: color ?? 'rgba(255,255,255,0.55)',
             background: 'transparent',
-            fontWeight: 400,
+            fontWeight: 500,
           }}
         >
           {item}
@@ -319,9 +317,8 @@ function Tags({ items, color }: { items: string[]; color?: string }) {
 
 function AxisCard({ label, type }: { label: string; type: ConstitutionKey }) {
   return (
-    <div className="rounded-[0.75rem] p-4 relative overflow-hidden" style={{ background: GRADIENTS[type], border: '1px solid rgba(255,255,255,0.15)' }}>
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.15), transparent 55%)', pointerEvents: 'none' }} />
-      <div style={{ position: 'relative' }}>
+    <div className="rounded-[0.75rem] p-4" style={{ backgroundColor: GRADIENTS[type], border: '1px solid rgba(255,255,255,0.10)' }}>
+      <div>
         <p className="text-eyebrow mb-1" style={{ color: 'rgba(255,255,255,0.50)' }}>{label}</p>
         <p className="font-semibold text-sm text-white">{constitutions[type].name}</p>
         <p style={{ fontSize: '0.6875rem', opacity: 0.65, marginTop: '0.25rem', color: '#fff' }}>
