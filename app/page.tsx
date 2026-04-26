@@ -1,10 +1,23 @@
 import Link from 'next/link';
 
+/* 소음=흰, 소양=연회, 태음=진회, 태양=검정 */
 const CARDS = [
-  { name: '태양인', hanja: '太陽人', task: '분노를 다스리는 사람', gradient: 'linear-gradient(135deg, #2d5f9e 0%, #5d97c8 50%, #a8cce4 100%)', glow: '0 0 40px 8px rgba(93,151,200,0.35), 0 0 80px 16px rgba(93,151,200,0.15)' },
-  { name: '소양인', hanja: '少陽人', task: '슬픔을 다스리는 사람',  gradient: 'linear-gradient(135deg, #b86d2e 0%, #d9954e 50%, #f0c07a 100%)', glow: '0 0 40px 8px rgba(217,149,78,0.35),  0 0 80px 16px rgba(217,149,78,0.15)' },
-  { name: '태음인', hanja: '太陰人', task: '탐닉을 다스리는 사람',  gradient: 'linear-gradient(135deg, #2a2724 0%, #56504a 50%, #9c9288 100%)', glow: '0 0 40px 8px rgba(156,146,136,0.28), 0 0 80px 16px rgba(156,146,136,0.10)' },
-  { name: '소음인', hanja: '少陰人', task: '기쁨의 기복을 다스리는 사람', gradient: 'linear-gradient(135deg, #18542f 0%, #2e7d50 50%, #52a876 100%)', glow: '0 0 40px 8px rgba(82,168,118,0.35),  0 0 80px 16px rgba(82,168,118,0.15)' },
+  { name: '소음인', hanja: '少陰人', task: '기쁨의 기복을 다스리는 사람',
+    gradient: 'linear-gradient(135deg, #d8d8d6 0%, #b8b8b5 50%, #989895 100%)',
+    glow: '0 0 20px 4px rgba(255,255,255,0.10)',
+    textMain: '#111110', textSub: 'rgba(0,0,0,0.50)' },
+  { name: '소양인', hanja: '少陽人', task: '슬픔을 다스리는 사람',
+    gradient: 'linear-gradient(135deg, #909090 0%, #707070 50%, #545454 100%)',
+    glow: '0 0 16px 3px rgba(200,200,200,0.07)',
+    textMain: '#ffffff', textSub: 'rgba(255,255,255,0.60)' },
+  { name: '태음인', hanja: '太陰人', task: '탐닉을 다스리는 사람',
+    gradient: 'linear-gradient(135deg, #484644 0%, #2e2c2a 50%, #1a1918 100%)',
+    glow: '0 0 14px 3px rgba(100,100,100,0.06)',
+    textMain: 'rgba(255,255,255,0.92)', textSub: 'rgba(255,255,255,0.55)' },
+  { name: '태양인', hanja: '太陽人', task: '분노를 다스리는 사람',
+    gradient: 'linear-gradient(135deg, #1c1b1a 0%, #0e0d0c 50%, #060810 100%)',
+    glow: '0 0 14px 3px rgba(255,255,255,0.05)',
+    textMain: 'rgba(255,255,255,0.92)', textSub: 'rgba(255,255,255,0.55)' },
 ];
 
 export default function LandingPage() {
@@ -60,11 +73,11 @@ export default function LandingPage() {
                 pointerEvents: 'none',
               }}
             />
-            <p style={{ fontSize: '0.625rem', letterSpacing: '0.18em', opacity: 0.55, textTransform: 'uppercase', marginBottom: '0.75rem', position: 'relative' }}>
+            <p style={{ fontSize: '0.625rem', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem', position: 'relative', color: c.textSub }}>
               {c.hanja}
             </p>
-            <p style={{ fontSize: '1.125rem', fontWeight: 500, marginBottom: '0.375rem', position: 'relative' }}>{c.name}</p>
-            <p style={{ fontSize: '0.75rem', opacity: 0.70, lineHeight: 1.5, position: 'relative' }}>{c.task}</p>
+            <p style={{ fontSize: '1.125rem', fontWeight: 500, marginBottom: '0.375rem', position: 'relative', color: c.textMain }}>{c.name}</p>
+            <p style={{ fontSize: '0.75rem', lineHeight: 1.5, position: 'relative', color: c.textSub }}>{c.task}</p>
           </div>
         ))}
       </div>

@@ -12,21 +12,37 @@ import {
   isAxisEquanimous, StrengthTier,
 } from '@/lib/scoring';
 
-/* ── 디자인 상수 ── */
+/* ── 디자인 상수 (모노크롬 — 흰→연회→진회→검정) ── */
+/* 소음=흰, 소양=연회, 태음=진회, 태양=검정 */
 const GRADIENTS: Record<ConstitutionKey, string> = {
-  taeyang: 'linear-gradient(135deg, #2d5f9e 0%, #5d97c8 50%, #a8cce4 100%)',
-  soyang:  'linear-gradient(135deg, #b86d2e 0%, #d9954e 50%, #f0c07a 100%)',
-  taeeum:  'linear-gradient(135deg, #2a2724 0%, #56504a 50%, #9c9288 100%)',
-  soeum:   'linear-gradient(135deg, #18542f 0%, #2e7d50 50%, #52a876 100%)',
+  soeum:   'linear-gradient(135deg, #d8d8d6 0%, #b8b8b5 50%, #989895 100%)',
+  soyang:  'linear-gradient(135deg, #909090 0%, #707070 50%, #545454 100%)',
+  taeeum:  'linear-gradient(135deg, #484644 0%, #2e2c2a 50%, #1a1918 100%)',
+  taeyang: 'linear-gradient(135deg, #1c1b1a 0%, #0e0d0c 50%, #060810 100%)',
 };
-const GLOWS: Record<ConstitutionKey, string> = {
-  taeyang: '0 0 40px 8px rgba(93,151,200,0.35), 0 0 80px 16px rgba(93,151,200,0.15)',
-  soyang:  '0 0 40px 8px rgba(217,149,78,0.35),  0 0 80px 16px rgba(217,149,78,0.15)',
-  taeeum:  '0 0 40px 8px rgba(156,146,136,0.25), 0 0 80px 16px rgba(156,146,136,0.10)',
-  soeum:   '0 0 40px 8px rgba(82,168,118,0.35),  0 0 80px 16px rgba(82,168,118,0.15)',
-};
+
+/* 분포 바 / 단색 참조 */
 const SOLID: Record<ConstitutionKey, string> = {
-  taeyang: '#5d97c8', soyang: '#d9954e', taeeum: '#9c9288', soeum: '#52a876',
+  soeum:  '#b0b0ae',
+  soyang: '#707070',
+  taeeum: '#484644',
+  taeyang:'#1c1b1a',
+};
+
+/* 카드 배경 밝기에 따른 텍스트 색상 */
+const TEXT_ON: Record<ConstitutionKey, { main: string; sub: string }> = {
+  soeum:   { main: '#111110',             sub: 'rgba(0,0,0,0.50)'   },
+  soyang:  { main: '#1a1918',             sub: 'rgba(0,0,0,0.50)'   },
+  taeeum:  { main: 'rgba(255,255,255,0.92)', sub: 'rgba(255,255,255,0.55)' },
+  taeyang: { main: 'rgba(255,255,255,0.92)', sub: 'rgba(255,255,255,0.55)' },
+};
+
+/* 체질 카드 glow (절반 이하, 컬러 없음) */
+const GLOWS: Record<ConstitutionKey, string> = {
+  soeum:   '0 0 20px 4px rgba(255,255,255,0.10), 0 0 40px 8px rgba(255,255,255,0.04)',
+  soyang:  '0 0 16px 3px rgba(200,200,200,0.07), 0 0 32px 6px rgba(200,200,200,0.03)',
+  taeeum:  '0 0 14px 3px rgba(100,100,100,0.06), 0 0 28px 5px rgba(100,100,100,0.03)',
+  taeyang: '0 0 14px 3px rgba(255,255,255,0.05), 0 0 28px 5px rgba(255,255,255,0.02)',
 };
 const OTHER: Record<ConstitutionKey, ConstitutionKey[]> = {
   taeyang: ['soyang','taeeum','soeum'], soyang: ['taeyang','taeeum','soeum'],
@@ -59,9 +75,10 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
   const emoW     = has && !emoEq ? getAxisWinner(emotionScores!, emotionCount) : null;
   const pcts     = has ? getPercentages(scores!) : null;
 
-  const grad  = GRADIENTS[c.key];
-  const glow  = GLOWS[c.key];
-  const solid = SOLID[c.key];
+  const grad   = GRADIENTS[c.key];
+  const glow   = GLOWS[c.key];
+  const solid  = SOLID[c.key];
+  const textOn = TEXT_ON[c.key];
 
   return (
     <main className="flex-1 flex flex-col items-center px-5 sm:px-8 py-10 max-w-4xl mx-auto w-full gap-3">
@@ -73,12 +90,12 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
       >
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), transparent 55%)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative' }}>
-          <p className="text-eyebrow mb-5" style={{ color: 'rgba(255,255,255,0.50)', fontSize: '0.6875rem' }}>당신의 사상체질은</p>
-          <p style={{ fontSize: '1rem', opacity: 0.60, letterSpacing: '0.12em', marginBottom: '0.375rem', fontWeight: 400 }}>{c.hanja}</p>
-          <p className="text-display mb-4">{c.name}</p>
-          <p style={{ fontSize: '0.9375rem', opacity: 0.85, lineHeight: 1.65 }}>{c.oneLiner}</p>
+          <p className="text-eyebrow mb-5" style={{ color: textOn.sub, fontSize: '0.6875rem' }}>당신의 사상체질은</p>
+          <p style={{ fontSize: '1rem', letterSpacing: '0.12em', marginBottom: '0.375rem', fontWeight: 400, color: textOn.sub }}>{c.hanja}</p>
+          <p className="text-display mb-4" style={{ color: textOn.main }}>{c.name}</p>
+          <p style={{ fontSize: '0.9375rem', lineHeight: 1.65, color: textOn.sub }}>{c.oneLiner}</p>
           {tier && (
-            <p className="mt-4 text-eyebrow" style={{ color: 'rgba(255,255,255,0.45)' }}>
+            <p className="mt-4 text-eyebrow" style={{ color: textOn.sub }}>
               {tierLabel(tier.tier, c.name, constitutions[tier.secondary].name)}
             </p>
           )}
@@ -159,9 +176,9 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
       <div className="w-full rounded-[1rem] p-8 text-center relative overflow-hidden" style={{ background: grad, boxShadow: glow, border: '1px solid rgba(255,255,255,0.15)' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), transparent 55%)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative' }}>
-          <p className="text-eyebrow mb-5" style={{ color: 'rgba(255,255,255,0.50)', fontSize: '0.6875rem' }}>이제마 선생이 말씀하시길</p>
-          <p style={{ fontSize: '1.375rem', fontWeight: 600, lineHeight: 1.4, marginBottom: '1rem', color: '#fff' }}>&ldquo;{c.lifeTask}&rdquo;</p>
-          <p style={{ fontSize: '0.875rem', opacity: 0.80, lineHeight: 1.7 }}>{c.lifeTaskDesc}</p>
+          <p className="text-eyebrow mb-5" style={{ color: textOn.sub, fontSize: '0.6875rem' }}>이제마 선생이 말씀하시길</p>
+          <p style={{ fontSize: '1.375rem', fontWeight: 600, lineHeight: 1.4, marginBottom: '1rem', color: textOn.main }}>&ldquo;{c.lifeTask}&rdquo;</p>
+          <p style={{ fontSize: '0.875rem', lineHeight: 1.7, color: textOn.sub }}>{c.lifeTaskDesc}</p>
         </div>
       </div>
 

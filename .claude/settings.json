@@ -8,7 +8,15 @@
       "Bash(git -C /Users/kt/sasang-check push origin main)",
       "Bash(git -C /Users/kt/sasang-check diff --stat)",
       "Bash(git -C /Users/kt/sasang-check add .claude/settings.json)",
-      "Bash(git -C /Users/kt/sasang-check commit -m ' *)"
+      "Bash(git -C /Users/kt/sasang-check commit -m ' *)",
+      "Bash(git -C /Users/kt/sasang-check add app/layout.tsx app/globals.css \"app/result/[type]/ResultClient.tsx\")",
+      "Bash(node -e \"const https = require\\('https'\\); https.get\\('https://fonts.googleapis.com/css2?family=Gmarket+Sans+KR:wght@700&display=swap', r => { let d=''; r.on\\('data', c => d+=c\\); r.on\\('end', \\(\\) => console.log\\(d.substring\\(0,300\\)\\)\\); }\\);\")",
+      "Bash(npm search *)",
+      "Bash(npm info *)",
+      "Bash(npm show *)",
+      "Bash(git -C /Users/kt/sasang-check add app/layout.tsx app/globals.css public/fonts/GmarketSansTTF/)",
+      "Bash(git -C /Users/kt/sasang-check add app/globals.css \"app/result/[type]/ResultClient.tsx\")",
+      "Bash(git -C /Users/kt/sasang-check add -A)"
     ]
   }
 }
