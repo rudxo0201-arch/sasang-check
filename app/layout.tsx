@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import { Orbitron } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 
@@ -9,6 +10,13 @@ const pretendard = localFont({
   display: 'swap',
   preload: true,
   weight: '45 920',
+});
+
+const orbitron = Orbitron({
+  subsets: ['latin'],
+  variable: '--font-orbitron',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -23,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`h-full ${pretendard.variable}`}>
+    <html lang="ko" className={`h-full ${pretendard.variable} ${orbitron.variable}`}>
       <head>
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-DZ5SFQWN9R" strategy="afterInteractive" />
         <Script id="ga-init" strategy="afterInteractive">{`

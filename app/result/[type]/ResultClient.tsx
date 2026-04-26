@@ -73,9 +73,9 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
       >
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), transparent 55%)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative' }}>
-          <p className="text-eyebrow mb-4" style={{ color: 'rgba(255,255,255,0.55)' }}>당신의 사상체질은</p>
-          <p style={{ fontSize: '0.75rem', opacity: 0.55, letterSpacing: '0.16em', marginBottom: '0.25rem' }}>{c.hanja}</p>
-          <p className="text-display mb-3">{c.name}</p>
+          <p className="text-eyebrow mb-5" style={{ color: 'rgba(255,255,255,0.50)', fontSize: '0.6875rem' }}>당신의 사상체질은</p>
+          <p style={{ fontSize: '1rem', opacity: 0.60, letterSpacing: '0.12em', marginBottom: '0.375rem', fontWeight: 400 }}>{c.hanja}</p>
+          <p className="text-display mb-4">{c.name}</p>
           <p style={{ fontSize: '0.9375rem', opacity: 0.85, lineHeight: 1.65 }}>{c.oneLiner}</p>
           {tier && (
             <p className="mt-4 text-eyebrow" style={{ color: 'rgba(255,255,255,0.45)' }}>
@@ -159,7 +159,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
       <div className="w-full rounded-[1rem] p-8 text-center relative overflow-hidden" style={{ background: grad, boxShadow: glow, border: '1px solid rgba(255,255,255,0.15)' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), transparent 55%)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative' }}>
-          <p className="text-eyebrow mb-4" style={{ color: 'rgba(255,255,255,0.50)' }}>이제마 선생이 말씀하시길</p>
+          <p className="text-eyebrow mb-5" style={{ color: 'rgba(255,255,255,0.50)', fontSize: '0.6875rem' }}>이제마 선생이 말씀하시길</p>
           <p style={{ fontSize: '1.375rem', fontWeight: 600, lineHeight: 1.4, marginBottom: '1rem', color: '#fff' }}>&ldquo;{c.lifeTask}&rdquo;</p>
           <p style={{ fontSize: '0.875rem', opacity: 0.80, lineHeight: 1.7 }}>{c.lifeTaskDesc}</p>
         </div>
