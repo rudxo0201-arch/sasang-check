@@ -16,7 +16,8 @@
       "Bash(npm show *)",
       "Bash(git -C /Users/kt/sasang-check add app/layout.tsx app/globals.css public/fonts/GmarketSansTTF/)",
       "Bash(git -C /Users/kt/sasang-check add app/globals.css \"app/result/[type]/ResultClient.tsx\")",
-      "Bash(git -C /Users/kt/sasang-check add -A)"
+      "Bash(git -C /Users/kt/sasang-check add -A)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
