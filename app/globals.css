@@ -2,8 +2,8 @@
 
 @theme {
   /* ── OU Space ── */
-  --color-bg: #060810;
-  --color-bg-alt: #0a0e18;
+  --color-bg: #030303;
+  --color-bg-alt: #080808;
 
   /* ── OU Glow (절반 이하) ── */
   --glow-xs: 0 0 4px 0 rgba(255,255,255,0.04);
@@ -74,6 +74,78 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    /* ── 미세 별 (0.5px) ── */
+    radial-gradient(circle at  7% 11%, rgba(255,255,255,0.75) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 13%  4%, rgba(255,255,255,0.55) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 19% 22%, rgba(255,255,255,0.80) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 27%  9%, rgba(255,255,255,0.60) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 34% 17%, rgba(255,255,255,0.70) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 42%  3%, rgba(255,255,255,0.50) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 51% 14%, rgba(255,255,255,0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 59%  7%, rgba(255,255,255,0.65) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 66% 20%, rgba(255,255,255,0.75) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 74%  2%, rgba(255,255,255,0.55) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 81% 16%, rgba(255,255,255,0.80) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 89%  8%, rgba(255,255,255,0.60) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 96% 23%, rgba(255,255,255,0.70) 0.5px, transparent 0.5px),
+    radial-gradient(circle at  3% 31%, rgba(255,255,255,0.50) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 10% 44%, rgba(255,255,255,0.80) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 18% 37%, rgba(255,255,255,0.65) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 25% 52%, rgba(255,255,255,0.75) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 33% 41%, rgba(255,255,255,0.55) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 40% 58%, rgba(255,255,255,0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 48% 33%, rgba(255,255,255,0.60) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 56% 49%, rgba(255,255,255,0.70) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 64% 38%, rgba(255,255,255,0.50) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 72% 55%, rgba(255,255,255,0.80) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 79% 43%, rgba(255,255,255,0.65) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 87% 60%, rgba(255,255,255,0.75) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 93% 47%, rgba(255,255,255,0.55) 0.5px, transparent 0.5px),
+    radial-gradient(circle at  6% 68%, rgba(255,255,255,0.80) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 14% 75%, rgba(255,255,255,0.60) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 22% 63%, rgba(255,255,255,0.70) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 30% 80%, rgba(255,255,255,0.50) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 38% 71%, rgba(255,255,255,0.85) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 46% 87%, rgba(255,255,255,0.65) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 54% 76%, rgba(255,255,255,0.75) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 62% 92%, rgba(255,255,255,0.55) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 70% 67%, rgba(255,255,255,0.80) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 78% 84%, rgba(255,255,255,0.60) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 85% 73%, rgba(255,255,255,0.70) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 92% 89%, rgba(255,255,255,0.50) 0.5px, transparent 0.5px),
+    radial-gradient(circle at  2% 93%, rgba(255,255,255,0.75) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 97% 96%, rgba(255,255,255,0.65) 0.5px, transparent 0.5px),
+    /* ── 소형 별 (1px) ── */
+    radial-gradient(circle at 16% 28%, rgba(255,255,255,0.80) 1px, transparent 1px),
+    radial-gradient(circle at 36% 13%, rgba(255,255,255,0.70) 1px, transparent 1px),
+    radial-gradient(circle at 55% 39%, rgba(255,255,255,0.85) 1px, transparent 1px),
+    radial-gradient(circle at 73% 26%, rgba(255,255,255,0.75) 1px, transparent 1px),
+    radial-gradient(circle at 88% 51%, rgba(255,255,255,0.80) 1px, transparent 1px),
+    radial-gradient(circle at  9% 57%, rgba(255,255,255,0.70) 1px, transparent 1px),
+    radial-gradient(circle at 44% 66%, rgba(255,255,255,0.85) 1px, transparent 1px),
+    radial-gradient(circle at 67% 79%, rgba(255,255,255,0.75) 1px, transparent 1px),
+    radial-gradient(circle at 28% 88%, rgba(255,255,255,0.80) 1px, transparent 1px),
+    radial-gradient(circle at 82% 94%, rgba(255,255,255,0.70) 1px, transparent 1px),
+    /* ── 밝은 별 (글로우 포함) ── */
+    radial-gradient(circle at 23% 34%, #fff 1.5px, rgba(255,255,255,0.20) 4px, transparent 7px),
+    radial-gradient(circle at 61% 18%, #fff 1.5px, rgba(255,255,255,0.20) 4px, transparent 7px),
+    radial-gradient(circle at 84% 36%, #fff 1.5px, rgba(255,255,255,0.20) 4px, transparent 7px),
+    radial-gradient(circle at 38% 72%, #fff 1.5px, rgba(255,255,255,0.20) 4px, transparent 7px),
+    radial-gradient(circle at  5% 48%, #fff 1.5px, rgba(255,255,255,0.20) 4px, transparent 7px),
+    radial-gradient(circle at 76% 61%, #fff 1.5px, rgba(255,255,255,0.20) 4px, transparent 7px),
+    radial-gradient(circle at 50% 83%, #fff 1.5px, rgba(255,255,255,0.20) 4px, transparent 7px),
+    radial-gradient(circle at 91% 15%, #fff 2px,   rgba(255,255,255,0.15) 5px, transparent 9px);
+}
+
+body > * { position: relative; z-index: 1; }
+
 /* ── 타이포 ── */
 .text-display {
   font-family: var(--font-display);
@@ -108,17 +180,17 @@ h3 {
 
 .text-eyebrow {
   font-family: var(--font-sans);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: rgba(255,255,255,0.60);
 }
 
 .text-caption {
-  font-size: 0.9375rem;
+  font-size: 1.0625rem;
   line-height: 1.75;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.70);
 }
 
 /* ── OU 컴포넌트 ── */
@@ -126,14 +198,14 @@ h3 {
 /* FloatingBlock — 투명 + 테두리 + glow */
 .floating-block {
   background: transparent;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-muted);
   border-radius: var(--radius-card);
   padding: 24px;
   box-shadow: var(--glow-sm);
   transition: var(--ou-transition);
 }
 .floating-block:hover {
-  border-color: var(--border-medium);
+  border-color: var(--border-hover);
   box-shadow: var(--glow-hover);
 }
 

@@ -83,18 +83,18 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
   return (
     <main className="flex-1 flex flex-col items-center px-5 sm:px-8 py-10 max-w-4xl mx-auto w-full gap-3">
 
-      {/* 1. 히어로 — 체질 그라데이션 + glow */}
+      {/* 1. 히어로 — 흰 카드 */}
       <div
         className="w-full rounded-[1rem] p-8"
-        style={{ backgroundColor: grad, boxShadow: glow, border: '1px solid rgba(255,255,255,0.10)' }}
+        style={{ background: '#ffffff', boxShadow: '0 0 40px 8px rgba(255,255,255,0.12)' }}
       >
         <div>
-          <p className="text-eyebrow mb-5" style={{ color: textOn.sub }}>당신의 사상체질은</p>
-          <p style={{ fontSize: '1.0625rem', letterSpacing: '0.1em', marginBottom: '0.5rem', fontWeight: 400, color: textOn.sub }}>{c.hanja}</p>
-          <p className="text-display mb-4" style={{ color: textOn.main }}>{c.name}</p>
-          <p style={{ fontSize: '1rem', lineHeight: 1.7, color: textOn.sub }}>{c.oneLiner}</p>
+          <p className="text-eyebrow mb-5" style={{ color: 'rgba(0,0,0,0.45)' }}>당신의 사상체질은</p>
+          <p style={{ fontSize: '1.0625rem', letterSpacing: '0.1em', marginBottom: '0.5rem', fontWeight: 400, color: 'rgba(0,0,0,0.45)' }}>{c.hanja}</p>
+          <p className="text-display mb-4" style={{ color: '#111111' }}>{c.name}</p>
+          <p style={{ fontSize: '1.125rem', lineHeight: 1.7, color: 'rgba(0,0,0,0.60)' }}>{c.oneLiner}</p>
           {tier && (
-            <p className="mt-4 text-eyebrow" style={{ color: textOn.sub }}>
+            <p className="mt-4 text-eyebrow" style={{ color: 'rgba(0,0,0,0.40)' }}>
               {tierLabel(tier.tier, c.name, constitutions[tier.secondary].name)}
             </p>
           )}
@@ -112,15 +112,15 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
                 const ip = key === c.key;
                 return (
                   <div key={key} className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: ip ? grad : SOLID[key], opacity: ip ? 1 : 0.3 }} />
-                    <span className="flex-1 text-sm" style={{ color: ip ? 'rgba(255,255,255,0.90)' : 'rgba(255,255,255,0.35)', fontWeight: ip ? 500 : 400 }}>
+                    <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: ip ? '#ffffff' : 'rgba(255,255,255,0.45)' }} />
+                    <span className="flex-1" style={{ fontSize: '1rem', color: ip ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.70)', fontWeight: ip ? 600 : 400 }}>
                       {constitutions[key].name}
                     </span>
-                    <span className="text-sm font-mono tabular-nums" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                    <span className="font-mono tabular-nums" style={{ fontSize: '1rem', color: ip ? 'rgba(255,255,255,0.90)' : 'rgba(255,255,255,0.65)' }}>
                       {pcts[key].toFixed(1)}%
                     </span>
-                    <div className="w-16 h-px flex-shrink-0" style={{ background: 'rgba(255,255,255,0.10)' }}>
-                      <div style={{ width: `${pcts[key]}%`, height: '100%', background: ip ? solid : SOLID[key], opacity: ip ? 0.9 : 0.25 }} />
+                    <div className="w-24 flex-shrink-0 rounded-full overflow-hidden" style={{ height: '6px', background: 'rgba(255,255,255,0.12)' }}>
+                      <div style={{ width: `${pcts[key]}%`, height: '100%', background: ip ? '#ffffff' : 'rgba(255,255,255,0.40)', borderRadius: '999px' }} />
                     </div>
                   </div>
                 );
@@ -135,7 +135,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
                 {emoEq ? (
                   <div className="rounded-[0.75rem] p-4" style={{ border: '1px solid rgba(255,255,255,0.18)', background: 'transparent' }}>
                     <p className="text-eyebrow mb-1">刺戟 · 情</p>
-                    <p className="font-medium text-sm" style={{ color: 'rgba(255,255,255,0.80)' }}>평정 (平靜)</p>
+                    <p className="font-medium" style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.88)' }}>평정 (平靜)</p>
                     <p className="text-caption mt-1">자극에 크게 동요하지 않습니다</p>
                   </div>
                 ) : emoW ? <AxisCard label="刺戟 · 情" type={emoW.type} /> : null}
@@ -152,7 +152,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
           ) : (
             <FBlock>
               <Label>타고난 몸의 특징</Label>
-              <p className="font-medium text-sm mt-2 mb-3" style={{ color: 'rgba(255,255,255,0.80)' }}>{c.organBalance.korean}</p>
+              <p className="font-medium mt-2 mb-3" style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.88)' }}>{c.organBalance.korean}</p>
               <ul className="space-y-2">
                 {c.bodyFeatures.map((f, i) => (
                   <li key={i} className="flex gap-2 text-caption"><span style={{ color: solid }}>·</span>{f}</li>
@@ -165,31 +165,31 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
 
       {/* 3. 핵심 감정 2×2 */}
       <div className="w-full grid grid-cols-2 gap-3">
-        <FBlock><Label>자연스러운 감정</Label><p className="text-lg font-semibold mt-2 mb-1" style={{ color: solid }}>{c.preferredEmotion.name}</p><p className="text-caption leading-relaxed">{c.preferredEmotion.description}</p></FBlock>
-        <FBlock><Label>다스려야 할 감정</Label><p className="text-lg font-semibold mt-2 mb-1" style={{ color: 'rgba(255,255,255,0.85)' }}>{c.difficultEmotion.name}</p><p className="text-caption leading-relaxed">{c.difficultEmotion.description}</p></FBlock>
-        <FBlock><Label>平素 · 性</Label><p className="font-medium text-sm mt-2 mb-1" style={{ color: 'rgba(255,255,255,0.80)' }}>{c.nature.korean}</p><p className="text-caption leading-relaxed">{c.nature.explanation}</p></FBlock>
-        <FBlock><Label>刺戟 · 情</Label><p className="font-medium text-sm mt-2 mb-1" style={{ color: 'rgba(255,255,255,0.80)' }}>{c.emotion.korean}</p><p className="text-caption leading-relaxed">{c.emotion.explanation}</p></FBlock>
+        <FBlock><Label>자연스러운 감정</Label><span className="inline-block mt-2 mb-3 px-4 py-1.5 rounded-full text-base font-semibold" style={{ border: '1.5px solid rgba(255,255,255,0.70)', color: 'rgba(255,255,255,0.92)' }}>{c.preferredEmotion.name}</span><p className="text-caption leading-relaxed">{c.preferredEmotion.description}</p></FBlock>
+        <FBlock><Label>다스려야 할 감정</Label><span className="inline-block mt-2 mb-3 px-4 py-1.5 rounded-full text-base font-semibold" style={{ border: '1.5px solid rgba(255,255,255,0.70)', color: 'rgba(255,255,255,0.92)' }}>{c.difficultEmotion.name}</span><p className="text-caption leading-relaxed">{c.difficultEmotion.description}</p></FBlock>
+        <FBlock><Label>平素 · 性</Label><p className="font-medium mt-2 mb-1" style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.88)' }}>{c.nature.korean}</p><p className="text-caption leading-relaxed">{c.nature.explanation}</p></FBlock>
+        <FBlock><Label>刺戟 · 情</Label><p className="font-medium mt-2 mb-1" style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.88)' }}>{c.emotion.korean}</p><p className="text-caption leading-relaxed">{c.emotion.explanation}</p></FBlock>
       </div>
 
       {/* 4. 평생 과제 */}
       <div className="w-full rounded-[1rem] p-8 text-center" style={{ backgroundColor: grad, boxShadow: glow, border: '1px solid rgba(255,255,255,0.10)' }}>
         <div>
-          <p className="text-eyebrow mb-5" style={{ color: textOn.sub, fontSize: '0.6875rem' }}>이제마 선생이 말씀하시길</p>
-          <p style={{ fontSize: '1.375rem', fontWeight: 600, lineHeight: 1.4, marginBottom: '1rem', color: textOn.main }}>&ldquo;{c.lifeTask}&rdquo;</p>
-          <p style={{ fontSize: '0.875rem', lineHeight: 1.7, color: textOn.sub }}>{c.lifeTaskDesc}</p>
+          <p className="text-eyebrow mb-5" style={{ color: textOn.sub }}>이제마 선생이 말씀하시길</p>
+          <p style={{ fontSize: '1.5rem', fontWeight: 600, lineHeight: 1.4, marginBottom: '1rem', color: textOn.main }}>&ldquo;{c.lifeTask}&rdquo;</p>
+          <p style={{ fontSize: '1rem', lineHeight: 1.7, color: textOn.sub }}>{c.lifeTaskDesc}</p>
         </div>
       </div>
 
       {/* 5. 건강 2×2 */}
       <div className="w-full grid grid-cols-2 gap-3">
-        <FBlock><Label>잘 맞는 음식</Label><Tags items={c.foods.good} color={solid} /></FBlock>
+        <FBlock><Label>잘 맞는 음식</Label><Tags items={c.foods.good} /></FBlock>
         <FBlock><Label>조심할 음식</Label><Tags items={c.foods.avoid} /></FBlock>
-        <FBlock><Label>맞는 운동</Label><Tags items={c.exercises} color={solid} /></FBlock>
+        <FBlock><Label>맞는 운동</Label><Tags items={c.exercises} /></FBlock>
         <FBlock>
           <Label>주의 신체 신호</Label>
           <ul className="mt-2 space-y-1.5">
             {c.vulnerableConditions.map((v, i) => (
-              <li key={i} className="flex gap-2 text-caption"><span style={{ color: 'rgba(255,255,255,0.25)' }}>·</span>{v}</li>
+              <li key={i} className="flex gap-2 text-caption"><span style={{ color: 'rgba(255,255,255,0.55)' }}>·</span>{v}</li>
             ))}
           </ul>
         </FBlock>
@@ -199,7 +199,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
       <div className="w-full grid grid-cols-2 gap-3">
         <FBlock>
           <Label>특히 조심하세요</Label>
-          <ul className="mt-2 space-y-2">{c.warningEmotions.map((w, i) => <li key={i} className="flex gap-2 text-caption"><span style={{ color: 'rgba(255,255,255,0.25)' }}>·</span>{w}</li>)}</ul>
+          <ul className="mt-2 space-y-2">{c.warningEmotions.map((w, i) => <li key={i} className="flex gap-2 text-caption"><span style={{ color: 'rgba(255,255,255,0.55)' }}>·</span>{w}</li>)}</ul>
         </FBlock>
         <FBlock><Label>강점이 과해지면</Label><p className="text-caption mt-2 leading-relaxed">{c.perils}</p></FBlock>
         <FBlock><Label>다스리면</Label><p className="text-caption mt-2 leading-relaxed">{c.ifMastered}</p></FBlock>
@@ -214,7 +214,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
             {c.emotionPractices.map((p, i) => (
               <li key={i}>
                 <p className="text-eyebrow mb-1">0{i + 1}</p>
-                <p className="font-medium text-sm mb-1" style={{ color: 'rgba(255,255,255,0.80)' }}>{p.title}</p>
+                <p className="font-medium mb-1" style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.88)' }}>{p.title}</p>
                 <p className="text-caption leading-relaxed">{p.desc}</p>
               </li>
             ))}
@@ -225,7 +225,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
           <ul className="mt-3 space-y-3">
             {c.dailyBehaviors.map((b, i) => (
               <li key={i} className="flex gap-2 text-caption leading-relaxed">
-                <span style={{ color: 'rgba(255,255,255,0.25)', flexShrink: 0 }}>·</span>{b}
+                <span style={{ color: 'rgba(255,255,255,0.55)', flexShrink: 0 }}>·</span>{b}
               </li>
             ))}
           </ul>
@@ -257,7 +257,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
           {OTHER[c.key].map((key) => (
             <Link key={key} href={`/result/${key}`} className="rounded-[0.75rem] p-4 text-center floating-block transition-opacity hover:opacity-80">
               <p className="text-eyebrow mb-1">{constitutions[key].hanja}</p>
-              <p className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.75)' }}>{constitutions[key].name}</p>
+              <p className="font-medium" style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.85)' }}>{constitutions[key].name}</p>
             </Link>
           ))}
         </div>
@@ -265,7 +265,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
       </div>
 
       {/* 출처 */}
-      <p className="text-center py-4 text-caption" style={{ color: 'rgba(255,255,255,0.20)', fontSize: '0.6875rem' }}>
+      <p className="text-center py-4" style={{ fontSize: '0.875rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.45)' }}>
         {c.classicQuoteKorean}<br />이 결과는 의학적 진단이 아닌 자가 참고용 분석입니다.
       </p>
     </main>
@@ -282,10 +282,10 @@ function FBlock({ children, className = '' }: { children: React.ReactNode; class
 function Label({ children }: { children: React.ReactNode }) {
   return (
     <p style={{
-      fontSize: '0.875rem',
+      fontSize: '1rem',
       fontWeight: 700,
       letterSpacing: '0.04em',
-      color: 'rgba(255,255,255,0.70)',
+      color: 'rgba(255,255,255,0.88)',
       marginBottom: '0.875rem',
     }}>
       {children}
@@ -301,9 +301,9 @@ function Tags({ items, color }: { items: string[]; color?: string }) {
           key={item}
           className="px-3 py-1 rounded-full"
           style={{
-            fontSize: '0.8125rem',
-            border: '1px solid rgba(255,255,255,0.18)',
-            color: color ?? 'rgba(255,255,255,0.55)',
+            fontSize: '1rem',
+            border: '1px solid rgba(255,255,255,0.40)',
+            color: color ?? 'rgba(255,255,255,0.80)',
             background: 'transparent',
             fontWeight: 500,
           }}
@@ -319,9 +319,9 @@ function AxisCard({ label, type }: { label: string; type: ConstitutionKey }) {
   return (
     <div className="rounded-[0.75rem] p-4" style={{ backgroundColor: GRADIENTS[type], border: '1px solid rgba(255,255,255,0.10)' }}>
       <div>
-        <p className="text-eyebrow mb-1" style={{ color: 'rgba(255,255,255,0.50)' }}>{label}</p>
-        <p className="font-semibold text-sm text-white">{constitutions[type].name}</p>
-        <p style={{ fontSize: '0.6875rem', opacity: 0.65, marginTop: '0.25rem', color: '#fff' }}>
+        <p className="text-eyebrow mb-1" style={{ color: 'rgba(255,255,255,0.70)' }}>{label}</p>
+        <p className="font-semibold text-white" style={{ fontSize: '1rem' }}>{constitutions[type].name}</p>
+        <p style={{ fontSize: '0.875rem', opacity: 0.80, marginTop: '0.25rem', color: '#fff' }}>
           {label.includes('性') ? constitutions[type].nature.korean : constitutions[type].emotion.korean}
         </p>
       </div>
@@ -332,9 +332,9 @@ function AxisCard({ label, type }: { label: string; type: ConstitutionKey }) {
 function SegBar({ pcts, primary }: { pcts: Record<ConstitutionKey, number>; primary: ConstitutionKey }) {
   const sorted = (Object.keys(pcts) as ConstitutionKey[]).sort((a, b) => pcts[b] - pcts[a]);
   return (
-    <div className="w-full flex rounded-full overflow-hidden gap-px mt-3" style={{ height: '2px' }}>
+    <div className="w-full flex rounded-full overflow-hidden gap-px mt-3" style={{ height: '4px' }}>
       {sorted.map((key) => (
-        <div key={key} style={{ width: `${pcts[key]}%`, background: key === primary ? GRADIENTS[key] : SOLID[key], opacity: key === primary ? 1 : 0.25, minWidth: pcts[key] > 0 ? '2px' : 0 }} />
+        <div key={key} style={{ width: `${pcts[key]}%`, background: key === primary ? '#ffffff' : 'rgba(255,255,255,0.35)', opacity: key === primary ? 1 : 1, minWidth: pcts[key] > 0 ? '3px' : 0 }} />
       ))}
     </div>
   );
