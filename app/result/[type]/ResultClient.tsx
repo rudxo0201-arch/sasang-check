@@ -265,7 +265,17 @@ function FBlock({ children, className = '' }: { children: React.ReactNode; class
 }
 
 function Label({ children }: { children: React.ReactNode }) {
-  return <p className="text-eyebrow">{children}</p>;
+  return (
+    <p style={{
+      fontSize: '0.75rem',
+      fontWeight: 600,
+      letterSpacing: '0.08em',
+      color: 'rgba(255,255,255,0.55)',
+      marginBottom: '0.75rem',
+    }}>
+      {children}
+    </p>
+  );
 }
 
 function Tags({ items, color }: { items: string[]; color?: string }) {
@@ -274,12 +284,13 @@ function Tags({ items, color }: { items: string[]; color?: string }) {
       {items.map((item) => (
         <span
           key={item}
-          className="text-xs px-2.5 py-1 rounded-full"
+          className="px-2.5 py-1 rounded-full"
           style={{
-            border: '1px solid rgba(255,255,255,0.15)',
-            color: color ?? 'rgba(255,255,255,0.45)',
+            fontSize: '0.6875rem',
+            border: '1px solid rgba(255,255,255,0.12)',
+            color: color ?? 'rgba(255,255,255,0.38)',
             background: 'transparent',
-            fontWeight: 500,
+            fontWeight: 400,
           }}
         >
           {item}

@@ -123,8 +123,8 @@ h3 {
 
 .text-caption {
   font-size: 0.8125rem;
-  line-height: 1.65;
-  color: var(--color-text-muted);
+  line-height: 1.7;
+  color: rgba(255,255,255,0.38);
 }
 
 /* ── OU 컴포넌트 ── */
