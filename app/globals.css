@@ -57,7 +57,7 @@
   --ou-transition: 180ms ease;
 
   /* font */
-  --font-display: var(--font-orbitron), sans-serif;
+  --font-display: var(--font-gmarket), 'Apple SD Gothic Neo', sans-serif;
   --font-sans: var(--font-pretendard), 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
 }
 
@@ -113,7 +113,7 @@ h3 {
 }
 
 .text-eyebrow {
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-size: 0.625rem;
   font-weight: 500;
   letter-spacing: 0.22em;

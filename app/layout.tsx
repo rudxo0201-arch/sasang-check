@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import { Orbitron } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 
@@ -12,11 +11,26 @@ const pretendard = localFont({
   weight: '45 920',
 });
 
-const orbitron = Orbitron({
-  subsets: ['latin'],
-  variable: '--font-orbitron',
+const gmarketSans = localFont({
+  src: [
+    {
+      path: '../public/fonts/GmarketSansTTF/GmarketSansTTFBold.ttf',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/GmarketSansTTF/GmarketSansTTFMedium.ttf',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/GmarketSansTTF/GmarketSansTTFLight.ttf',
+      weight: '300',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-gmarket',
   display: 'swap',
-  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -31,7 +45,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`h-full ${pretendard.variable} ${orbitron.variable}`}>
+    <html lang="ko" className={`h-full ${pretendard.variable} ${gmarketSans.variable}`}>
       <head>
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-DZ5SFQWN9R" strategy="afterInteractive" />
         <Script id="ga-init" strategy="afterInteractive">{`
