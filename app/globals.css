@@ -1,104 +1,118 @@
 @import "tailwindcss";
 
 @theme {
-  /* === surface (warm cream) === */
-  --color-bg: #f5efe6;
-  --color-bg-deep: #ede5d6;
-  --color-card: #ffffff;
-  --color-card-soft: #fbf7f0;
-  --color-bg-warning: #fff8e7;
-  --color-bg-emotion: #fbe9e3;
+  /* ── OU Space ── */
+  --color-bg: #060810;
+  --color-bg-alt: #0a0e18;
 
-  /* === text === */
-  --color-text: #0a0a0a;
-  --color-text-soft: #404040;
-  --color-text-muted: #6f6f6f;
-  --color-text-subtle: #a3a3a3;
-  --color-text-emotion: #b91c1c;
-  --color-text-on-color: #ffffff;
+  /* ── OU Glow ── */
+  --glow-xs: 0 0 8px 0 rgba(255,255,255,0.07);
+  --glow-sm: 0 0 14px 2px rgba(255,255,255,0.12);
+  --glow-md: 0 0 24px 4px rgba(255,255,255,0.18);
+  --glow-hover: 0 0 32px 6px rgba(255,255,255,0.26);
+  --glow-aura-sm: 0 0 32px 6px rgba(255,255,255,0.18), 0 0 64px 12px rgba(255,255,255,0.08);
+  --glow-aura-lg: 0 0 60px 14px rgba(255,255,255,0.28), 0 0 120px 24px rgba(255,255,255,0.12);
 
-  /* === border (그림자가 주력, 보더는 보조) === */
-  --color-border: #e5dfd2;
-  --color-border-strong: #d4ccba;
+  /* ── 체질 컬러 glow ── */
+  --glow-taeyang: 0 0 40px 8px rgba(93,151,200,0.28), 0 0 80px 16px rgba(93,151,200,0.12);
+  --glow-soyang:  0 0 40px 8px rgba(217,149,78,0.28),  0 0 80px 16px rgba(217,149,78,0.12);
+  --glow-taeeum:  0 0 40px 8px rgba(156,146,136,0.22), 0 0 80px 16px rgba(156,146,136,0.08);
+  --glow-soeum:   0 0 40px 8px rgba(82,168,118,0.28),  0 0 80px 16px rgba(82,168,118,0.12);
 
-  /* === 4체질 단색 === */
-  --color-taeyang: #1d4ed8;
-  --color-soyang: #dc2626;
-  --color-taeeum: #57534e;
-  --color-soeum: #047857;
-  --color-equanimous: #6b7c6e;
+  /* ── OU Border ── */
+  --border-faint:  rgba(255,255,255,0.10);
+  --border-subtle: rgba(255,255,255,0.20);
+  --border-muted:  rgba(255,255,255,0.30);
+  --border-medium: rgba(255,255,255,0.42);
+  --border-hover:  rgba(255,255,255,0.60);
+  --border-strong: rgba(255,255,255,0.80);
 
-  /* === 4체질 그라데이션 (후속 PR에서 카드/히어로/ShareCard에 적용) === */
-  --gradient-taeyang: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
-  --gradient-soyang: linear-gradient(135deg, #dc2626 0%, #f97316 60%, #fbbf24 100%);
-  --gradient-taeeum: linear-gradient(135deg, #44403c 0%, #78716c 60%, #a8a29e 100%);
-  --gradient-soeum: linear-gradient(135deg, #047857 0%, #10b981 60%, #6ee7b7 100%);
+  /* ── OU Surface ── */
+  --surface-faint:  rgba(255,255,255,0.015);
+  --surface-subtle: rgba(255,255,255,0.030);
+  --surface-hover:  rgba(255,255,255,0.070);
 
-  /* === radius (레퍼런스: 매우 둥근 모서리) === */
-  --radius-sm: 0.75rem;
-  --radius-card: 1.25rem;
-  --radius-card-lg: 1.75rem;
-  --radius-pill: 9999px;
+  /* ── Text ── */
+  --color-text:        rgba(255,255,255,0.95);
+  --color-text-soft:   rgba(255,255,255,0.70);
+  --color-text-muted:  rgba(255,255,255,0.40);
+  --color-text-subtle: rgba(255,255,255,0.22);
 
-  /* === shadow (soft glass — 보더 대신 주력) === */
-  --shadow-card: 0 1px 2px rgba(20, 14, 0, 0.04), 0 8px 24px rgba(20, 14, 0, 0.05);
-  --shadow-card-hover: 0 2px 4px rgba(20, 14, 0, 0.06), 0 16px 36px rgba(20, 14, 0, 0.08);
-  --shadow-cta: 0 8px 20px rgba(10, 10, 10, 0.18);
+  /* ── legacy aliases (기존 페이지 참조용, 후속 제거) ── */
+  --color-border: rgba(255,255,255,0.20);
+  --color-card:   rgba(255,255,255,0.03);
 
-  /* === font === */
-  --font-sans: var(--font-pretendard), 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  /* 4체질 그라데이션 */
+  --gradient-taeyang: linear-gradient(135deg, #2d5f9e 0%, #5d97c8 50%, #a8cce4 100%);
+  --gradient-soyang:  linear-gradient(135deg, #b86d2e 0%, #d9954e 50%, #f0c07a 100%);
+  --gradient-taeeum:  linear-gradient(135deg, #2a2724 0%, #56504a 50%, #9c9288 100%);
+  --gradient-soeum:   linear-gradient(135deg, #18542f 0%, #2e7d50 50%, #52a876 100%);
+
+  /* radius */
+  --radius-pill: 999px;
+  --radius-card: 16px;
+  --radius-md:   10px;
+
+  /* transition */
+  --ou-transition: 180ms ease;
+
+  /* font */
+  --font-sans: var(--font-pretendard), 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
 }
 
-/* 기존 변수 alias — 기존 페이지 인라인 style 호환. 후속 PR(컴포넌트 추출)에서 제거 */
+/* ── legacy aliases ── */
 :root {
   --bg: var(--color-bg);
   --ink: var(--color-text);
   --ink-soft: var(--color-text-soft);
   --ink-muted: var(--color-text-muted);
-  --border: var(--color-border);
+  --border: var(--border-subtle);
 }
 
 body {
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.7;
   background: var(--color-bg);
-  color: var(--color-text);
+  color: var(--color-text-soft);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* display — 랜딩 히어로, 결과 체질명 */
+/* ── 타이포 ── */
 .text-display {
-  font-size: clamp(2.5rem, 7vw, 4.5rem);
-  font-weight: 900;
-  letter-spacing: -0.025em;
-  line-height: 1.0;
+  font-size: clamp(2.5rem, 6.5vw, 4.5rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  color: var(--color-text);
 }
 
 h1 {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  line-height: 1.25;
+  color: var(--color-text);
 }
 
 h2 {
-  font-size: clamp(1.375rem, 3vw, 1.625rem);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.35;
+  font-size: clamp(1.0625rem, 2vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1.4;
+  color: var(--color-text);
 }
 
 h3 {
-  font-size: 1.125rem;
-  font-weight: 700;
-  line-height: 1.45;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
 }
 
 .text-eyebrow {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.6875rem;
+  font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-text-muted);
@@ -106,14 +120,80 @@ h3 {
 
 .text-caption {
   font-size: 0.8125rem;
-  line-height: 1.5;
+  line-height: 1.65;
   color: var(--color-text-muted);
 }
 
+/* ── OU 컴포넌트 ── */
+
+/* FloatingBlock — 투명 + 테두리 + glow */
+.floating-block {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--glow-sm);
+  transition: var(--ou-transition);
+}
+.floating-block:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--glow-hover);
+}
+
+/* WhiteBlock — 별처럼 빛나는 흰 카드 */
+.white-block {
+  background: #ffffff;
+  border: 1px solid rgba(255,255,255,0.80);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  color: #111;
+  box-shadow: var(--glow-aura-sm);
+  transition: var(--ou-transition);
+  position: relative;
+  overflow: hidden;
+}
+.white-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 35% 28%, rgba(255,255,255,0.55), transparent 60%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+.white-block > * { position: relative; z-index: 1; }
+.white-block:hover {
+  box-shadow: var(--glow-aura-lg);
+  transform: translateY(-2px);
+}
+
+/* PillBlock — 투명 pill 버튼 */
+.pill-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-soft);
+  cursor: pointer;
+  transition: var(--ou-transition);
+  box-shadow: var(--glow-xs);
+  font-family: inherit;
+  letter-spacing: 0.01em;
+}
+.pill-block:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--glow-md);
+  color: var(--color-text);
+}
+
 :focus-visible {
-  outline: 2px solid var(--color-text);
+  outline: 1px solid rgba(255,255,255,0.5);
   outline-offset: 3px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {

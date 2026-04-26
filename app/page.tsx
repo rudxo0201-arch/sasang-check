@@ -1,81 +1,95 @@
 import Link from 'next/link';
 
-const constitutionCards = [
-  { name: '태양인', hanja: '太陽人', bg: '#1d4ed8', task: '분노를 다스리는 사람' },
-  { name: '소양인', hanja: '少陽人', bg: '#dc2626', task: '슬픔을 다스리는 사람' },
-  { name: '태음인', hanja: '太陰人', bg: '#57534e', task: '탐닉을 다스리는 사람' },
-  { name: '소음인', hanja: '少陰人', bg: '#047857', task: '기쁨의 기복을 다스리는 사람' },
+const CARDS = [
+  { name: '태양인', hanja: '太陽人', task: '분노를 다스리는 사람', gradient: 'linear-gradient(135deg, #2d5f9e 0%, #5d97c8 50%, #a8cce4 100%)', glow: '0 0 40px 8px rgba(93,151,200,0.35), 0 0 80px 16px rgba(93,151,200,0.15)' },
+  { name: '소양인', hanja: '少陽人', task: '슬픔을 다스리는 사람',  gradient: 'linear-gradient(135deg, #b86d2e 0%, #d9954e 50%, #f0c07a 100%)', glow: '0 0 40px 8px rgba(217,149,78,0.35),  0 0 80px 16px rgba(217,149,78,0.15)' },
+  { name: '태음인', hanja: '太陰人', task: '탐닉을 다스리는 사람',  gradient: 'linear-gradient(135deg, #2a2724 0%, #56504a 50%, #9c9288 100%)', glow: '0 0 40px 8px rgba(156,146,136,0.28), 0 0 80px 16px rgba(156,146,136,0.10)' },
+  { name: '소음인', hanja: '少陰人', task: '기쁨의 기복을 다스리는 사람', gradient: 'linear-gradient(135deg, #18542f 0%, #2e7d50 50%, #52a876 100%)', glow: '0 0 40px 8px rgba(82,168,118,0.35),  0 0 80px 16px rgba(82,168,118,0.15)' },
 ];
 
 export default function LandingPage() {
   return (
-    <main className="flex-1 flex flex-col items-center px-5 py-12 max-w-2xl mx-auto w-full">
+    <main className="flex-1 flex flex-col w-full max-w-5xl mx-auto px-8 sm:px-14 py-14">
 
-      {/* 상단 */}
-      <div className="text-center mb-10">
-        <p className="text-sm tracking-widest mb-3" style={{ color: 'var(--ink-muted)' }}>
-          이제마 『동의수세보원』 성정론 기반
-        </p>
-        <h1 className="mb-4">
+      {/* eyebrow */}
+      <div className="flex justify-between items-baseline mb-16">
+        <p className="text-eyebrow">사상의학</p>
+        <p className="text-eyebrow">이제마 성정론 기반</p>
+      </div>
+
+      {/* 히어로 */}
+      <div className="mb-10">
+        <h1 className="text-display">
           사상체질<br />건강체크
         </h1>
-        <p className="text-lg" style={{ color: 'var(--ink-soft)' }}>
-          당신의 몸과 마음 사용 설명서
-        </p>
       </div>
 
-      <div className="w-12 border-t-2 mb-10" style={{ borderColor: 'var(--ink-muted)' }} />
-
-      {/* 소개 문구 */}
-      <div className="w-full space-y-5 mb-10 text-lg" style={{ color: 'var(--ink-soft)' }}>
-        <p>
-          사람마다 태어날 때부터{' '}
-          <strong style={{ color: 'var(--ink)' }}>장부(臟腑)의 크고 작음</strong>이 다릅니다.
-          그 차이가 어떤 감정에 끌리고, 어떤 감정 앞에서 무너지는지를 결정합니다.
-        </p>
-        <p>
-          이제마 선생은 이것을 다스리는 것이{' '}
-          <strong style={{ color: 'var(--ink)' }}>평생의 수양이자 건강의 근본</strong>이라 했습니다.
-        </p>
-        <p>
-          단순한 성격 테스트가 아닙니다.{' '}
-          <strong style={{ color: 'var(--ink)' }}>당신의 체질에 맞는 삶의 방식</strong>을 알려드립니다.
-        </p>
+      {/* 서브텍스트 — 우측 */}
+      <div className="flex justify-end mb-16">
+        <div style={{ maxWidth: '26rem' }} className="text-right">
+          <p className="mb-4 leading-relaxed" style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.55)', fontWeight: 400 }}>
+            사람마다 태어날 때부터 장부의 크고 작음이 다릅니다.
+            이제마 선생은 이것을 다스리는 것이 평생의 수양이자 건강의 근본이라 했습니다.
+          </p>
+          <p style={{ fontSize: '0.6875rem', letterSpacing: '0.16em', color: 'rgba(255,255,255,0.30)' }}>
+            태양인 · 소양인 · 태음인 · 소음인
+          </p>
+        </div>
       </div>
 
-      {/* 체질 카드 4개 */}
-      <div className="w-full grid grid-cols-2 gap-3 mb-10">
-        {constitutionCards.map((c) => (
+      {/* 구분선 */}
+      <div className="w-full mb-10" style={{ height: '1px', background: 'rgba(255,255,255,0.10)' }} />
+
+      {/* 체질 카드 — white-block 스타일 + 체질 컬러 배경 */}
+      <div className="grid grid-cols-2 gap-3 mb-10">
+        {CARDS.map((c) => (
           <div
             key={c.name}
-            className="rounded-2xl p-4 text-white"
-            style={{ backgroundColor: c.bg }}
+            className="rounded-[1rem] p-6 text-white relative overflow-hidden"
+            style={{
+              background: c.gradient,
+              boxShadow: c.glow,
+              border: '1px solid rgba(255,255,255,0.15)',
+            }}
           >
-            <div className="text-xs opacity-70 mb-1">{c.hanja}</div>
-            <div className="font-bold text-xl">{c.name}</div>
-            <div className="text-sm opacity-90 mt-2 leading-snug">{c.task}</div>
+            {/* inner highlight */}
+            <div
+              style={{
+                position: 'absolute', inset: 0,
+                background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), transparent 55%)',
+                pointerEvents: 'none',
+              }}
+            />
+            <p style={{ fontSize: '0.625rem', letterSpacing: '0.18em', opacity: 0.55, textTransform: 'uppercase', marginBottom: '0.75rem', position: 'relative' }}>
+              {c.hanja}
+            </p>
+            <p style={{ fontSize: '1.125rem', fontWeight: 500, marginBottom: '0.375rem', position: 'relative' }}>{c.name}</p>
+            <p style={{ fontSize: '0.75rem', opacity: 0.70, lineHeight: 1.5, position: 'relative' }}>{c.task}</p>
           </div>
         ))}
       </div>
 
-      {/* 시작 버튼 */}
-      <Link
-        href="/onboarding"
-        className="w-full flex items-center justify-center rounded-2xl py-5 text-xl font-bold text-white transition-opacity hover:opacity-90 active:opacity-75"
-        style={{ backgroundColor: 'var(--ink)' }}
-      >
-        나의 체질 알아보기
-      </Link>
+      {/* CTA */}
+      <div className="flex items-center justify-between">
+        <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.02em' }}>
+          소요 시간 약 5분 · 광고 없음 · 회원가입 불필요
+        </p>
+        <Link
+          href="/onboarding"
+          className="pill-block"
+          style={{ color: 'rgba(255,255,255,0.80)' }}
+        >
+          나의 체질 알아보기
+          <span style={{ fontSize: '1rem', opacity: 0.6 }}>→</span>
+        </Link>
+      </div>
 
-      <p className="mt-5 text-sm text-center" style={{ color: 'var(--ink-muted)' }}>
-        소요 시간 약 5분 · 회원가입 불필요
-      </p>
-
-      {/* 주의사항 */}
-      <p className="mt-12 text-xs text-center leading-relaxed" style={{ color: 'var(--ink-muted)' }}>
-        이 결과는 의학적 진단이 아닌 사상의학 성정론에 기반한 자가 참고용 분석입니다.
-        정확한 체질 판별과 치료는 한의사 진료가 필요합니다.
-      </p>
+      {/* 하단 */}
+      <div className="mt-16 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.22)', letterSpacing: '0.02em' }}>
+          이 결과는 의학적 진단이 아닌 자가 참고용 분석입니다. 정확한 체질 판별과 치료는 한의사 진료가 필요합니다.
+        </p>
+      </div>
     </main>
   );
 }

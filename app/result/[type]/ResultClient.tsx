@@ -7,512 +7,310 @@ import ShareCard from '@/components/ShareCard';
 import DownloadButton from '@/components/DownloadButton';
 import { useAppStore } from '@/lib/store';
 import {
-  getAxisWinner,
-  getStrengthTier,
-  getPercentages,
-  axisNarrative,
-  axisEquanimousNarrative,
-  isAxisEquanimous,
-  StrengthTier,
+  getAxisWinner, getStrengthTier, getPercentages,
+  axisNarrative, axisEquanimousNarrative,
+  isAxisEquanimous, StrengthTier,
 } from '@/lib/scoring';
 
-const otherKeys: Record<ConstitutionKey, ConstitutionKey[]> = {
-  taeyang: ['soyang', 'taeeum', 'soeum'],
-  soyang: ['taeyang', 'taeeum', 'soeum'],
-  taeeum: ['taeyang', 'soyang', 'soeum'],
-  soeum: ['taeyang', 'soyang', 'taeeum'],
+/* ── 디자인 상수 ── */
+const GRADIENTS: Record<ConstitutionKey, string> = {
+  taeyang: 'linear-gradient(135deg, #2d5f9e 0%, #5d97c8 50%, #a8cce4 100%)',
+  soyang:  'linear-gradient(135deg, #b86d2e 0%, #d9954e 50%, #f0c07a 100%)',
+  taeeum:  'linear-gradient(135deg, #2a2724 0%, #56504a 50%, #9c9288 100%)',
+  soeum:   'linear-gradient(135deg, #18542f 0%, #2e7d50 50%, #52a876 100%)',
+};
+const GLOWS: Record<ConstitutionKey, string> = {
+  taeyang: '0 0 40px 8px rgba(93,151,200,0.35), 0 0 80px 16px rgba(93,151,200,0.15)',
+  soyang:  '0 0 40px 8px rgba(217,149,78,0.35),  0 0 80px 16px rgba(217,149,78,0.15)',
+  taeeum:  '0 0 40px 8px rgba(156,146,136,0.25), 0 0 80px 16px rgba(156,146,136,0.10)',
+  soeum:   '0 0 40px 8px rgba(82,168,118,0.35),  0 0 80px 16px rgba(82,168,118,0.15)',
+};
+const SOLID: Record<ConstitutionKey, string> = {
+  taeyang: '#5d97c8', soyang: '#d9954e', taeeum: '#9c9288', soeum: '#52a876',
+};
+const OTHER: Record<ConstitutionKey, ConstitutionKey[]> = {
+  taeyang: ['soyang','taeeum','soeum'], soyang: ['taeyang','taeeum','soeum'],
+  taeeum:  ['taeyang','soyang','soeum'], soeum: ['taeyang','soyang','taeeum'],
 };
 
-function tierLabel(tier: StrengthTier, primaryName: string, secondaryName: string): string {
-  switch (tier) {
-    case 'typical': return `전형적인 ${primaryName}`;
-    case 'leaning': return `${primaryName} 성향이 강합니다`;
-    case 'mixed':   return `${primaryName} · ${secondaryName} 혼합형`;
-  }
+function tierLabel(tier: StrengthTier, p: string, s: string) {
+  if (tier === 'typical') return `전형적인 ${p}`;
+  if (tier === 'leaning') return `${p} 성향이 강함`;
+  return `${p} · ${s} 혼합형`;
 }
 
+/* ── 메인 ── */
 export default function ResultClient({ constitution: c }: { constitution: ConstitutionContent }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const scores = useAppStore((s) => s.scores);
-  const natureScores = useAppStore((s) => s.natureScores);
+  const scores        = useAppStore((s) => s.scores);
+  const natureScores  = useAppStore((s) => s.natureScores);
   const emotionScores = useAppStore((s) => s.emotionScores);
-  const natureCount = useAppStore((s) => s.natureCount);
-  const emotionCount = useAppStore((s) => s.emotionCount);
-  const hasStoreData = mounted && scores !== null && natureScores !== null && emotionScores !== null;
+  const natureCount   = useAppStore((s) => s.natureCount);
+  const emotionCount  = useAppStore((s) => s.emotionCount);
+  const has = mounted && scores !== null && natureScores !== null && emotionScores !== null;
 
-  const tier = hasStoreData ? getStrengthTier(scores!) : null;
-  const natureEquanimous = hasStoreData ? isAxisEquanimous(natureScores!, natureCount) : false;
-  const emotionEquanimous = hasStoreData ? isAxisEquanimous(emotionScores!, emotionCount) : false;
-  const natureWinner = hasStoreData && !natureEquanimous ? getAxisWinner(natureScores!, natureCount) : null;
-  const emotionWinner = hasStoreData && !emotionEquanimous ? getAxisWinner(emotionScores!, emotionCount) : null;
-  const percentages = hasStoreData ? getPercentages(scores!) : null;
-  const showAxisCard = hasStoreData && natureWinner && (emotionWinner || emotionEquanimous);
+  const tier     = has ? getStrengthTier(scores!) : null;
+  const natEq    = has ? isAxisEquanimous(natureScores!, natureCount) : false;
+  const emoEq    = has ? isAxisEquanimous(emotionScores!, emotionCount) : false;
+  const natW     = has && !natEq ? getAxisWinner(natureScores!, natureCount) : null;
+  const emoW     = has && !emoEq ? getAxisWinner(emotionScores!, emotionCount) : null;
+  const pcts     = has ? getPercentages(scores!) : null;
+
+  const grad  = GRADIENTS[c.key];
+  const glow  = GLOWS[c.key];
+  const solid = SOLID[c.key];
 
   return (
-    <main className="flex-1 flex flex-col items-center px-5 py-10 max-w-2xl mx-auto w-full">
+    <main className="flex-1 flex flex-col items-center px-5 sm:px-8 py-10 max-w-4xl mx-auto w-full gap-3">
 
-      {/* 체질 발표 */}
-      <div className="w-full text-center mb-10">
-        <p className="text-sm tracking-widest mb-4" style={{ color: 'var(--ink-muted)' }}>
-          당신의 사상체질은
-        </p>
-        <div
-          className="inline-block rounded-3xl px-8 py-6 text-white mb-4"
-          style={{ backgroundColor: c.hex }}
-        >
-          <div className="text-base opacity-75 mb-1">{c.hanja}</div>
-          <div className="text-4xl font-black">{c.name}</div>
+      {/* 1. 히어로 — 체질 그라데이션 + glow */}
+      <div
+        className="w-full rounded-[1rem] p-8 text-white relative overflow-hidden"
+        style={{ background: grad, boxShadow: glow, border: '1px solid rgba(255,255,255,0.15)' }}
+      >
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), transparent 55%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'relative' }}>
+          <p className="text-eyebrow mb-4" style={{ color: 'rgba(255,255,255,0.55)' }}>당신의 사상체질은</p>
+          <p style={{ fontSize: '0.75rem', opacity: 0.55, letterSpacing: '0.16em', marginBottom: '0.25rem' }}>{c.hanja}</p>
+          <p className="text-display mb-3">{c.name}</p>
+          <p style={{ fontSize: '0.9375rem', opacity: 0.85, lineHeight: 1.65 }}>{c.oneLiner}</p>
+          {tier && (
+            <p className="mt-4 text-eyebrow" style={{ color: 'rgba(255,255,255,0.45)' }}>
+              {tierLabel(tier.tier, c.name, constitutions[tier.secondary].name)}
+            </p>
+          )}
         </div>
-        <p className="text-xl font-semibold mt-2" style={{ color: 'var(--ink)' }}>
-          {c.oneLiner}
-        </p>
       </div>
 
-      {/* 강도 등급 뱃지 */}
-      {tier && (
-        <div className="w-full text-center mb-10">
-          <p className="text-xs font-bold tracking-widest mb-3" style={{ color: 'var(--ink-muted)' }}>
-            결과 강도
-          </p>
-          <div
-            className="inline-block px-7 py-3 rounded-full"
-            style={{
-              backgroundColor: c.hex,
-              color: '#fdf8f1',
-              boxShadow: `0 4px 14px ${c.hex}55`,
-            }}
-          >
-            <span className="text-lg font-black tracking-wide">
-              {tierLabel(tier.tier, c.name, constitutions[tier.secondary].name)}
-            </span>
-          </div>
-          <p className="text-xs mt-3" style={{ color: 'var(--ink-muted)' }}>
-            {tier.tier === 'typical' && `${c.name} 성향이 매우 뚜렷합니다 (${(tier.topShare * 100).toFixed(0)}%)`}
-            {tier.tier === 'leaning' && `${c.name} 쪽으로 분명히 기울어 있습니다 (${(tier.topShare * 100).toFixed(0)}%)`}
-            {tier.tier === 'mixed' && `여러 체질의 결이 섞여 있습니다 (1위 ${(tier.topShare * 100).toFixed(0)}%)`}
-          </p>
-        </div>
-      )}
-
-      {/* 네 체질의 분포 */}
-      {percentages && (
-        <>
-          <Divider />
-          <Section>
-            <SectionLabel>네 체질의 분포</SectionLabel>
-            <p className="mb-5 text-base" style={{ color: 'var(--ink-soft)' }}>
-              당신의 답변이 네 체질에 어떻게 분포되어 있는지 보여드립니다.
-            </p>
-            <div className="space-y-3">
-              {(Object.keys(percentages) as ConstitutionKey[])
-                .sort((a, b) => percentages[b] - percentages[a])
-                .map((key) => {
-                  const oc = constitutions[key];
-                  const pct = percentages[key];
-                  const isPrimary = key === c.key;
-                  return (
-                    <div key={key}>
-                      <div className="flex items-baseline justify-between mb-1">
-                        <span
-                          className="text-sm font-bold"
-                          style={{ color: isPrimary ? oc.hex : 'var(--ink-soft)' }}
-                        >
-                          {oc.name}{isPrimary && ' ★'}
-                        </span>
-                        <span className="text-sm font-mono" style={{ color: 'var(--ink-muted)' }}>
-                          {pct.toFixed(1)}%
-                        </span>
-                      </div>
-                      <div
-                        className="w-full h-3 rounded-full overflow-hidden"
-                        style={{ backgroundColor: 'var(--border)' }}
-                      >
-                        <div
-                          className="h-full rounded-full transition-all duration-500"
-                          style={{
-                            width: `${pct}%`,
-                            minWidth: '4px',
-                            backgroundColor: oc.hex,
-                            opacity: isPrimary ? 1 : 0.55,
-                          }}
-                        />
-                      </div>
+      {/* 2. 분포 + 性情 */}
+      {pcts && (
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <FBlock>
+            <Label>체질 분포</Label>
+            <SegBar pcts={pcts} primary={c.key} />
+            <div className="mt-4 space-y-2">
+              {(Object.keys(pcts) as ConstitutionKey[]).sort((a, b) => pcts[b] - pcts[a]).map((key) => {
+                const ip = key === c.key;
+                return (
+                  <div key={key} className="flex items-center gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: ip ? grad : SOLID[key], opacity: ip ? 1 : 0.3 }} />
+                    <span className="flex-1 text-sm" style={{ color: ip ? 'rgba(255,255,255,0.90)' : 'rgba(255,255,255,0.35)', fontWeight: ip ? 500 : 400 }}>
+                      {constitutions[key].name}
+                    </span>
+                    <span className="text-sm font-mono tabular-nums" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                      {pcts[key].toFixed(1)}%
+                    </span>
+                    <div className="w-16 h-px flex-shrink-0" style={{ background: 'rgba(255,255,255,0.10)' }}>
+                      <div style={{ width: `${pcts[key]}%`, height: '100%', background: ip ? solid : SOLID[key], opacity: ip ? 0.9 : 0.25 }} />
                     </div>
-                  );
-                })}
+                  </div>
+                );
+              })}
             </div>
-          </Section>
-        </>
+          </FBlock>
+          {natW ? (
+            <FBlock>
+              <Label>당신의 性과 情</Label>
+              <div className="mt-3 space-y-2">
+                <AxisCard label="平素 · 性" type={natW.type} />
+                {emoEq ? (
+                  <div className="rounded-[0.75rem] p-4" style={{ border: '1px solid rgba(255,255,255,0.18)', background: 'transparent' }}>
+                    <p className="text-eyebrow mb-1">刺戟 · 情</p>
+                    <p className="font-medium text-sm" style={{ color: 'rgba(255,255,255,0.80)' }}>평정 (平靜)</p>
+                    <p className="text-caption mt-1">자극에 크게 동요하지 않습니다</p>
+                  </div>
+                ) : emoW ? <AxisCard label="刺戟 · 情" type={emoW.type} /> : null}
+              </div>
+              {natW && (emoW || emoEq) && (
+                <p className="text-caption mt-4 leading-relaxed">
+                  {emoEq
+                    ? axisEquanimousNarrative(natW.type, constitutions[natW.type].name)
+                    : emoW ? axisNarrative(natW.type, emoW.type, constitutions[natW.type].name, constitutions[emoW.type].name, constitutions[emoW.type].lifeTask)
+                    : ''}
+                </p>
+              )}
+            </FBlock>
+          ) : (
+            <FBlock>
+              <Label>타고난 몸의 특징</Label>
+              <p className="font-medium text-sm mt-2 mb-3" style={{ color: 'rgba(255,255,255,0.80)' }}>{c.organBalance.korean}</p>
+              <ul className="space-y-2">
+                {c.bodyFeatures.map((f, i) => (
+                  <li key={i} className="flex gap-2 text-caption"><span style={{ color: solid }}>·</span>{f}</li>
+                ))}
+              </ul>
+            </FBlock>
+          )}
+        </div>
       )}
 
-      <Divider />
+      {/* 3. 핵심 감정 2×2 */}
+      <div className="w-full grid grid-cols-2 gap-3">
+        <FBlock><Label>자연스러운 감정</Label><p className="text-lg font-semibold mt-2 mb-1" style={{ color: solid }}>{c.preferredEmotion.name}</p><p className="text-caption leading-relaxed">{c.preferredEmotion.description}</p></FBlock>
+        <FBlock><Label>다스려야 할 감정</Label><p className="text-lg font-semibold mt-2 mb-1" style={{ color: 'rgba(255,255,255,0.85)' }}>{c.difficultEmotion.name}</p><p className="text-caption leading-relaxed">{c.difficultEmotion.description}</p></FBlock>
+        <FBlock><Label>平素 · 性</Label><p className="font-medium text-sm mt-2 mb-1" style={{ color: 'rgba(255,255,255,0.80)' }}>{c.nature.korean}</p><p className="text-caption leading-relaxed">{c.nature.explanation}</p></FBlock>
+        <FBlock><Label>刺戟 · 情</Label><p className="font-medium text-sm mt-2 mb-1" style={{ color: 'rgba(255,255,255,0.80)' }}>{c.emotion.korean}</p><p className="text-caption leading-relaxed">{c.emotion.explanation}</p></FBlock>
+      </div>
 
-      {/* 장부 대소 */}
-      <Section>
-        <SectionLabel>타고난 몸의 특징</SectionLabel>
-        <p className="text-xl font-bold mb-3">
-          {c.organBalance.korean} 체질입니다.
-        </p>
-        <p className="mb-5" style={{ color: 'var(--ink-soft)' }}>
-          이것은 태어날 때부터 정해진 것입니다. 이 차이가 어떤 감정에 끌리고, 어떤 감정 앞에서 흔들리는지를 결정합니다.
-        </p>
-        <ul className="space-y-2">
-          {c.bodyFeatures.map((f, i) => (
-            <li key={i} className="flex gap-2" style={{ color: 'var(--ink-soft)' }}>
-              <span>→</span><span>{f}</span>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <Divider />
-
-      {/* 끌리는 감정 vs 견디기 어려운 감정 */}
-      <Section>
-        <SectionLabel>두 가지 감정</SectionLabel>
-        <div className="space-y-3">
-          <div className="rounded-2xl p-5" style={{ backgroundColor: '#f0ebe0' }}>
-            <p className="text-xs font-bold mb-2" style={{ color: 'var(--ink-muted)' }}>
-              평소에 자연스럽게 나오는 감정
-            </p>
-            <p className="text-xl font-black mb-2">{c.preferredEmotion.name}</p>
-            <p className="text-base leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
-              {c.preferredEmotion.description}
-            </p>
-          </div>
-          <div className="rounded-2xl p-5" style={{ backgroundColor: '#fce7e0' }}>
-            <p className="text-xs font-bold mb-2" style={{ color: '#b91c1c' }}>
-              이 감정 앞에서 흔들립니다
-            </p>
-            <p className="text-xl font-black mb-2">{c.difficultEmotion.name}</p>
-            <p className="text-base leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
-              {c.difficultEmotion.description}
-            </p>
-          </div>
+      {/* 4. 평생 과제 */}
+      <div className="w-full rounded-[1rem] p-8 text-center relative overflow-hidden" style={{ background: grad, boxShadow: glow, border: '1px solid rgba(255,255,255,0.15)' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), transparent 55%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'relative' }}>
+          <p className="text-eyebrow mb-4" style={{ color: 'rgba(255,255,255,0.50)' }}>이제마 선생이 말씀하시길</p>
+          <p style={{ fontSize: '1.375rem', fontWeight: 600, lineHeight: 1.4, marginBottom: '1rem', color: '#fff' }}>&ldquo;{c.lifeTask}&rdquo;</p>
+          <p style={{ fontSize: '0.875rem', opacity: 0.80, lineHeight: 1.7 }}>{c.lifeTaskDesc}</p>
         </div>
-      </Section>
+      </div>
 
-      {/* 당신의 性과 情 */}
-      {showAxisCard && natureWinner && (
-        <>
-          <Divider />
-          <Section>
-            <SectionLabel>당신의 性과 情</SectionLabel>
-            <p className="mb-5 text-base" style={{ color: 'var(--ink-soft)' }}>
-              평소(性)와 자극받았을 때(情)의 당신은 같은 체질일 수도, 다른 체질일 수도 있습니다.
-            </p>
-            <div className="grid grid-cols-2 gap-3 mb-5">
-              <div
-                className="rounded-2xl p-5 text-white"
-                style={{ backgroundColor: constitutions[natureWinner.type].hex }}
-              >
-                <p className="text-xs font-bold tracking-widest opacity-75 mb-2">평소의 나 · 性</p>
-                <p className="text-2xl font-black mb-1">{constitutions[natureWinner.type].name}</p>
-                <p className="text-xs opacity-80">{constitutions[natureWinner.type].nature.korean}</p>
-                {natureWinner.tied && (
-                  <p className="text-xs opacity-60 mt-2">
-                    {constitutions[natureWinner.type].name}와 {constitutions[natureWinner.tiedWith].name}이 거의 같은 비중입니다
-                  </p>
-                )}
-              </div>
-              {emotionEquanimous ? (
-                <div
-                  className="rounded-2xl p-5"
-                  style={{ backgroundColor: '#6b7c6e', color: '#fdf8f1' }}
-                >
-                  <p className="text-xs font-bold tracking-widest opacity-75 mb-2">자극받았을 때의 나 · 情</p>
-                  <p className="text-2xl font-black mb-1">평정 (平靜)</p>
-                  <p className="text-xs opacity-80">자극에 크게 동요하지 않습니다</p>
-                </div>
-              ) : emotionWinner ? (
-                <div
-                  className="rounded-2xl p-5 text-white"
-                  style={{ backgroundColor: constitutions[emotionWinner.type].hex }}
-                >
-                  <p className="text-xs font-bold tracking-widest opacity-75 mb-2">자극받았을 때의 나 · 情</p>
-                  <p className="text-2xl font-black mb-1">{constitutions[emotionWinner.type].name}</p>
-                  <p className="text-xs opacity-80">{constitutions[emotionWinner.type].emotion.korean}</p>
-                  {emotionWinner.tied && (
-                    <p className="text-xs opacity-60 mt-2">
-                      {constitutions[emotionWinner.type].name}와 {constitutions[emotionWinner.tiedWith].name}이 거의 같은 비중입니다
-                    </p>
-                  )}
-                </div>
-              ) : null}
-            </div>
-            <div className="rounded-2xl p-5" style={{ backgroundColor: '#f0ebe0' }}>
-              <p className="text-base leading-relaxed" style={{ color: 'var(--ink)' }}>
-                {emotionEquanimous
-                  ? axisEquanimousNarrative(
-                      natureWinner.type,
-                      constitutions[natureWinner.type].name,
-                    )
-                  : emotionWinner
-                  ? axisNarrative(
-                      natureWinner.type,
-                      emotionWinner.type,
-                      constitutions[natureWinner.type].name,
-                      constitutions[emotionWinner.type].name,
-                      constitutions[emotionWinner.type].lifeTask,
-                    )
-                  : ''}
-              </p>
-            </div>
-          </Section>
-        </>
-      )}
+      {/* 5. 건강 2×2 */}
+      <div className="w-full grid grid-cols-2 gap-3">
+        <FBlock><Label>잘 맞는 음식</Label><Tags items={c.foods.good} color={solid} /></FBlock>
+        <FBlock><Label>조심할 음식</Label><Tags items={c.foods.avoid} /></FBlock>
+        <FBlock><Label>맞는 운동</Label><Tags items={c.exercises} color={solid} /></FBlock>
+        <FBlock>
+          <Label>주의 신체 신호</Label>
+          <ul className="mt-2 space-y-1.5">
+            {c.vulnerableConditions.map((v, i) => (
+              <li key={i} className="flex gap-2 text-caption"><span style={{ color: 'rgba(255,255,255,0.25)' }}>·</span>{v}</li>
+            ))}
+          </ul>
+        </FBlock>
+      </div>
 
-      <Divider />
+      {/* 6. 경계 2×2 */}
+      <div className="w-full grid grid-cols-2 gap-3">
+        <FBlock>
+          <Label>특히 조심하세요</Label>
+          <ul className="mt-2 space-y-2">{c.warningEmotions.map((w, i) => <li key={i} className="flex gap-2 text-caption"><span style={{ color: 'rgba(255,255,255,0.25)' }}>·</span>{w}</li>)}</ul>
+        </FBlock>
+        <FBlock><Label>강점이 과해지면</Label><p className="text-caption mt-2 leading-relaxed">{c.perils}</p></FBlock>
+        <FBlock><Label>다스리면</Label><p className="text-caption mt-2 leading-relaxed">{c.ifMastered}</p></FBlock>
+        <FBlock><Label>무시하면</Label><p className="text-caption mt-2 leading-relaxed">{c.ifNeglected}</p></FBlock>
+      </div>
 
-      {/* 인지 스타일 + 이미지 */}
-      <Section>
-        <SectionLabel>당신이 사람을 볼 때</SectionLabel>
-        <p className="text-lg leading-relaxed mb-4" style={{ color: 'var(--ink-soft)' }}>
-          {c.cognitionStyle}
-        </p>
-        <p className="text-lg leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
-          {c.naturalImage}
-        </p>
-      </Section>
+      {/* 7. 실천 + 일상 */}
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <FBlock>
+          <Label>오늘부터 할 수 있는 것</Label>
+          <ol className="mt-3 space-y-4">
+            {c.emotionPractices.map((p, i) => (
+              <li key={i}>
+                <p className="text-eyebrow mb-1">0{i + 1}</p>
+                <p className="font-medium text-sm mb-1" style={{ color: 'rgba(255,255,255,0.80)' }}>{p.title}</p>
+                <p className="text-caption leading-relaxed">{p.desc}</p>
+              </li>
+            ))}
+          </ol>
+        </FBlock>
+        <FBlock>
+          <Label>이런 적 있지 않으셨나요?</Label>
+          <ul className="mt-3 space-y-3">
+            {c.dailyBehaviors.map((b, i) => (
+              <li key={i} className="flex gap-2 text-caption leading-relaxed">
+                <span style={{ color: 'rgba(255,255,255,0.25)', flexShrink: 0 }}>·</span>{b}
+              </li>
+            ))}
+          </ul>
+        </FBlock>
+      </div>
 
-      <Divider />
-
-      {/* 성정 */}
-      <Section>
-        <SectionLabel>평소와 자극받았을 때</SectionLabel>
-        <div className="space-y-4">
-          <div>
-            <span
-              className="inline-block text-xs font-bold tracking-widest px-3 py-1 rounded-full mb-3"
-              style={{ backgroundColor: '#f0ebe0', color: 'var(--ink-soft)' }}
-            >
-              평소의 당신
-            </span>
-            <p className="font-bold text-lg mb-1">{c.nature.korean}</p>
-            <p style={{ color: 'var(--ink-soft)' }}>{c.nature.explanation}</p>
-          </div>
-          <div>
-            <span
-              className="inline-block text-xs font-bold tracking-widest px-3 py-1 rounded-full mb-3"
-              style={{ backgroundColor: '#fce7e0', color: '#b91c1c' }}
-            >
-              자극받았을 때의 당신
-            </span>
-            <p className="font-bold text-lg mb-1">{c.emotion.korean}</p>
-            <p style={{ color: 'var(--ink-soft)' }}>{c.emotion.explanation}</p>
-          </div>
-        </div>
-      </Section>
-
-      <Divider />
-
-      {/* "맞아맞아" 일상 묘사 */}
-      <Section>
-        <SectionLabel>이런 적 있지 않으셨나요?</SectionLabel>
-        <ul className="space-y-4">
-          {c.dailyBehaviors.map((b, i) => (
-            <li key={i} className="flex gap-3">
-              <span className="mt-1 text-lg flex-shrink-0">→</span>
-              <p style={{ color: 'var(--ink-soft)' }}>{b}</p>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <Divider />
-
-      {/* 평생 과제 — 임팩트 최대 */}
-      <Section>
-        <SectionLabel>당신의 평생 과제</SectionLabel>
-        <div
-          className="rounded-3xl p-8 text-center"
-          style={{ backgroundColor: 'var(--ink)', color: '#fdf8f1' }}
-        >
-          <p className="text-sm opacity-60 mb-3 tracking-widest">이제마 선생이 말씀하시길</p>
-          <p className="text-2xl font-black mb-4">
-            &ldquo;{c.lifeTask}&rdquo;
-          </p>
-          <p className="text-base opacity-80 leading-relaxed">{c.lifeTaskDesc}</p>
-        </div>
-      </Section>
-
-      <Divider />
-
-      {/* 경계해야 할 감정 */}
-      <Section>
-        <SectionLabel>특히 조심하세요</SectionLabel>
-        <div className="space-y-3">
-          {c.warningEmotions.map((w, i) => (
-            <div key={i} className="rounded-2xl p-4" style={{ backgroundColor: '#fff8f0', border: '1px solid #fde8d0' }}>
-              <p style={{ color: 'var(--ink-soft)' }}>{w}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      <Divider />
-
-      {/* 빠지기 쉬운 함정 */}
-      <Section>
-        <SectionLabel>당신의 강점이 과해지면</SectionLabel>
-        <p className="text-lg leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
-          {c.perils}
-        </p>
-      </Section>
-
-      <Divider />
-
-      {/* 다스리면 / 놓치면 */}
-      <Section>
-        <div className="space-y-4">
-          <div className="rounded-2xl p-5" style={{ border: '2px solid var(--border)' }}>
-            <div className="font-bold mb-2">✦ 다스리면</div>
-            <p style={{ color: 'var(--ink-soft)' }}>{c.ifMastered}</p>
-          </div>
-          <div className="rounded-2xl p-5" style={{ backgroundColor: '#fff8f0' }}>
-            <div className="font-bold mb-2">몸의 신호를 무시하면</div>
-            <p style={{ color: 'var(--ink-soft)' }}>{c.ifNeglected}</p>
-          </div>
-        </div>
-      </Section>
-
-      <Divider />
-
-      {/* 성정 관리법 */}
-      <Section>
-        <SectionLabel>오늘부터 할 수 있는 것</SectionLabel>
-        <div className="space-y-4">
-          {c.emotionPractices.map((p, i) => (
-            <div key={i} className="rounded-2xl p-5" style={{ border: '2px solid var(--border)' }}>
-              <div className="font-bold text-lg mb-2">
-                {i + 1}. {p.title}
-              </div>
-              <p style={{ color: 'var(--ink-soft)' }}>{p.desc}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      <Divider />
-
-      {/* 건강 관리법 */}
-      <Section>
-        <SectionLabel>이것이 곧 건강 관리법입니다</SectionLabel>
-        <div className="space-y-5">
-          <div>
-            <h3 className="mb-3">주의해야 할 신체 신호</h3>
-            <ul className="space-y-2" style={{ color: 'var(--ink-soft)' }}>
-              {c.vulnerableConditions.map((v, i) => (
-                <li key={i} className="flex gap-2"><span>·</span><span>{v}</span></li>
-              ))}
-            </ul>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-2xl p-4" style={{ backgroundColor: '#f0ebe0' }}>
-              <h3 className="mb-2">잘 맞는 음식</h3>
-              <p className="text-base" style={{ color: 'var(--ink-soft)' }}>{c.foods.good.join(', ')}</p>
-            </div>
-            <div className="rounded-2xl p-4" style={{ backgroundColor: '#fce7e0' }}>
-              <h3 className="mb-2">조심할 음식</h3>
-              <p className="text-base" style={{ color: 'var(--ink-soft)' }}>{c.foods.avoid.join(', ')}</p>
-            </div>
-          </div>
-          <div>
-            <h3 className="mb-2">맞는 운동</h3>
-            <p style={{ color: 'var(--ink-soft)' }}>{c.exercises.join(' · ')}</p>
-          </div>
-        </div>
-      </Section>
-
-      <Divider />
-
-      {/* 공유 카드 */}
-      <Section>
-        <SectionLabel>결과 카드 저장·공유</SectionLabel>
+      {/* 8. 공유 */}
+      <div className="w-full">
         <ShareCard ref={cardRef} constitution={c} />
-        <div className="mt-5 space-y-3">
-          <DownloadButton cardRef={cardRef} constitutionName={c.name} />
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <DownloadButton cardRef={cardRef} constitutionName={c.name} gradient={grad} />
           <button
             onClick={() => {
-              if (navigator.share) {
-                navigator.share({
-                  title: `나는 ${c.name} — 사상체질 건강체크`,
-                  text: `${c.oneLiner} | 평생 과제: ${c.lifeTask}`,
-                  url: window.location.href,
-                });
-              } else {
-                navigator.clipboard.writeText(window.location.href);
-                alert('링크가 복사되었습니다!');
-              }
+              if (navigator.share) { navigator.share({ title: `나는 ${c.name}`, text: c.oneLiner, url: window.location.href }); }
+              else { navigator.clipboard.writeText(window.location.href); alert('링크가 복사되었습니다!'); }
             }}
-            className="w-full rounded-2xl py-4 text-lg font-bold border-2 transition-colors hover:bg-black/5"
-            style={{ borderColor: 'var(--ink)', color: 'var(--ink)' }}
+            className="pill-block justify-center"
+            style={{ width: '100%' }}
           >
-            링크 공유하기
+            링크 공유
           </button>
         </div>
-      </Section>
+      </div>
 
-      {/* 다른 체질 미니 카드 */}
-      <Divider />
-      <Section>
-        <SectionLabel>배우자·가족도 해보세요</SectionLabel>
-        <p className="mb-5" style={{ color: 'var(--ink-soft)' }}>
-          두 사람의 체질이 만나면 어떤 케미가 펼쳐질지 궁금하지 않으신가요?
-        </p>
-        <div className="grid grid-cols-3 gap-3">
-          {otherKeys[c.key].map((key) => {
-            const oc = constitutions[key];
-            return (
-              <Link
-                key={key}
-                href={`/result/${key}`}
-                className="rounded-2xl p-3 text-white text-center transition-opacity hover:opacity-90"
-                style={{ backgroundColor: oc.hex }}
-              >
-                <div className="text-xs opacity-70">{oc.hanja}</div>
-                <div className="font-bold">{oc.name}</div>
-              </Link>
-            );
-          })}
+      {/* 9. 다른 체질 */}
+      <div className="w-full pt-2">
+        <p className="text-eyebrow text-center mb-3">배우자·가족도 해보세요</p>
+        <div className="grid grid-cols-3 gap-2 mb-2">
+          {OTHER[c.key].map((key) => (
+            <Link key={key} href={`/result/${key}`} className="rounded-[0.75rem] p-4 text-center floating-block transition-opacity hover:opacity-80">
+              <p className="text-eyebrow mb-1">{constitutions[key].hanja}</p>
+              <p className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.75)' }}>{constitutions[key].name}</p>
+            </Link>
+          ))}
         </div>
-        <Link
-          href="/onboarding"
-          className="mt-5 w-full flex items-center justify-center rounded-2xl py-4 text-lg font-bold border-2 transition-colors hover:bg-black/5"
-          style={{ borderColor: 'var(--border)', color: 'var(--ink-soft)' }}
-        >
-          처음부터 다시 하기
-        </Link>
-      </Section>
+        <Link href="/onboarding" className="pill-block w-full justify-center">처음부터 다시 하기</Link>
+      </div>
 
       {/* 출처 */}
-      <Divider />
-      <div className="w-full text-center text-sm space-y-2" style={{ color: 'var(--ink-muted)' }}>
-        <p className="italic">{c.classicQuoteKorean}</p>
-        <p className="text-xs mt-4">
-          이 결과는 의학적 진단이 아닌 자가 참고용 분석입니다.
-          정확한 체질 판별과 치료는 한의사 진료가 필요합니다.
-        </p>
-      </div>
+      <p className="text-center py-4 text-caption" style={{ color: 'rgba(255,255,255,0.20)', fontSize: '0.6875rem' }}>
+        {c.classicQuoteKorean}<br />이 결과는 의학적 진단이 아닌 자가 참고용 분석입니다.
+      </p>
     </main>
   );
 }
 
-function Section({ children }: { children: React.ReactNode }) {
-  return <div className="w-full mb-2">{children}</div>;
-}
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
+/* ── 공통 UI ── */
+function FBlock({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <p className="text-sm font-bold tracking-widest mb-4" style={{ color: 'var(--ink-muted)' }}>
-      {children}
-    </p>
+    <div className={`floating-block ${className}`}>{children}</div>
   );
 }
 
-function Divider() {
-  return <div className="w-full border-t my-8" style={{ borderColor: 'var(--border)' }} />;
+function Label({ children }: { children: React.ReactNode }) {
+  return <p className="text-eyebrow">{children}</p>;
+}
+
+function Tags({ items, color }: { items: string[]; color?: string }) {
+  return (
+    <div className="flex flex-wrap gap-1.5 mt-2">
+      {items.map((item) => (
+        <span
+          key={item}
+          className="text-xs px-2.5 py-1 rounded-full"
+          style={{
+            border: '1px solid rgba(255,255,255,0.15)',
+            color: color ?? 'rgba(255,255,255,0.45)',
+            background: 'transparent',
+            fontWeight: 500,
+          }}
+        >
+          {item}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function AxisCard({ label, type }: { label: string; type: ConstitutionKey }) {
+  return (
+    <div className="rounded-[0.75rem] p-4 relative overflow-hidden" style={{ background: GRADIENTS[type], border: '1px solid rgba(255,255,255,0.15)' }}>
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.15), transparent 55%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'relative' }}>
+        <p className="text-eyebrow mb-1" style={{ color: 'rgba(255,255,255,0.50)' }}>{label}</p>
+        <p className="font-semibold text-sm text-white">{constitutions[type].name}</p>
+        <p style={{ fontSize: '0.6875rem', opacity: 0.65, marginTop: '0.25rem', color: '#fff' }}>
+          {label.includes('性') ? constitutions[type].nature.korean : constitutions[type].emotion.korean}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function SegBar({ pcts, primary }: { pcts: Record<ConstitutionKey, number>; primary: ConstitutionKey }) {
+  const sorted = (Object.keys(pcts) as ConstitutionKey[]).sort((a, b) => pcts[b] - pcts[a]);
+  return (
+    <div className="w-full flex rounded-full overflow-hidden gap-px mt-3" style={{ height: '2px' }}>
+      {sorted.map((key) => (
+        <div key={key} style={{ width: `${pcts[key]}%`, background: key === primary ? GRADIENTS[key] : SOLID[key], opacity: key === primary ? 1 : 0.25, minWidth: pcts[key] > 0 ? '2px' : 0 }} />
+      ))}
+    </div>
+  );
 }

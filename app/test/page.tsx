@@ -9,7 +9,7 @@ import { calculateAxisScores } from '@/lib/scoring';
 export default function TestPage() {
   const router = useRouter();
   const { profile, answers, setAnswer, setResult } = useAppStore();
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent]   = useState(0);
   const [questions, setQuestions] = useState<Question[]>([]);
 
   useEffect(() => {
@@ -19,18 +19,17 @@ export default function TestPage() {
 
   if (!profile || questions.length === 0) return null;
 
-  const q = questions[current];
-  const total = questions.length;
-  const progress = Math.round(((current) / total) * 100);
+  const q        = questions[current];
+  const total    = questions.length;
+  const progress = Math.round((current / total) * 100);
 
   function handleAnswer(idx: number) {
     setAnswer(q.id, idx);
-
     if (current + 1 < total) {
       setCurrent((c) => c + 1);
     } else {
       const updated = { ...answers, [q.id]: idx };
-      const axis = calculateAxisScores(updated, profile!);
+      const axis    = calculateAxisScores(updated, profile!);
       const primary = (['taeyang', 'soyang', 'taeeum', 'soeum'] as const)
         .reduce((a, b) => axis.total[a] >= axis.total[b] ? a : b);
       setResult(primary, axis);
@@ -44,57 +43,41 @@ export default function TestPage() {
   }
 
   return (
-    <main className="flex-1 flex flex-col items-center px-5 py-10 max-w-2xl mx-auto w-full">
+    <main className="flex-1 flex flex-col w-full max-w-xl mx-auto px-8 py-14">
 
-      {/* 진행률 */}
-      <div className="w-full mb-8">
-        <div className="flex justify-between text-sm mb-2" style={{ color: 'var(--ink-muted)' }}>
-          <span>
-            <span className="font-bold" style={{ color: 'var(--ink)' }}>{current + 1}</span>
-            {' '}/{' '}{total}
-          </span>
-          <span>{progress}%</span>
-        </div>
-        <div className="w-full h-1.5 rounded-full" style={{ backgroundColor: 'var(--border)' }}>
-          <div
-            className="h-1.5 rounded-full transition-all duration-300"
-            style={{ width: `${progress}%`, backgroundColor: 'var(--ink)' }}
-          />
-        </div>
+      {/* 상단 */}
+      <div className="flex justify-between items-center mb-4">
+        <p className="text-eyebrow">{q.axis === 'nature' ? '性 — 평소의 나' : '情 — 자극받았을 때'}</p>
+        <p className="text-eyebrow">{current + 1} / {total}</p>
       </div>
-
-      {/* 질문 축 배지 */}
-      <div className="w-full mb-4">
-        <span
-          className="inline-block text-xs font-bold tracking-widest px-3 py-1 rounded-full"
-          style={{
-            backgroundColor: q.axis === 'nature' ? '#f0ebe0' : '#fce7e0',
-            color: q.axis === 'nature' ? 'var(--ink-soft)' : '#b91c1c',
-          }}
-        >
-          {q.axis === 'nature' ? '性 — 평소의 나' : '情 — 자극받았을 때의 나'}
-        </span>
+      <div className="w-full mb-16" style={{ height: '1px', background: 'rgba(255,255,255,0.10)' }}>
+        <div className="h-full transition-all duration-300" style={{ width: `${progress}%`, background: 'rgba(255,255,255,0.55)' }} />
       </div>
 
       {/* 질문 */}
-      <h2 className="w-full mb-8 leading-snug">{q.prompt}</h2>
+      <h1 className="mb-12">{q.prompt}</h1>
 
       {/* 선택지 */}
-      <div className="w-full space-y-3">
+      <div className="space-y-2">
         {q.options.map((opt, idx) => {
           const selected = answers[q.id] === idx;
           return (
             <button
               key={idx}
               onClick={() => handleAnswer(idx)}
-              className="w-full text-left rounded-2xl px-6 py-4 text-lg border-2 transition-all hover:shadow-sm active:scale-[0.99]"
+              className="w-full text-left rounded-[1rem] flex justify-between items-center transition-all"
               style={{
-                borderColor: selected ? 'var(--ink)' : 'var(--border)',
-                backgroundColor: selected ? '#f5f0e8' : 'transparent',
-                color: 'var(--ink)',
+                padding: '18px 24px',
+                border: `1px solid ${selected ? 'rgba(255,255,255,0.60)' : 'rgba(255,255,255,0.18)'}`,
+                background: selected ? 'rgba(255,255,255,0.07)' : 'transparent',
+                boxShadow: selected ? '0 0 24px 4px rgba(255,255,255,0.12)' : '0 0 8px 0 rgba(255,255,255,0.05)',
+                color: selected ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.60)',
+                fontWeight: selected ? 500 : 400,
+                fontSize: '0.9375rem',
               }}
             >
-              {opt.label}
+              <span>{opt.label}</span>
+              {selected && <span style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.60)' }}>●</span>}
             </button>
           );
         })}
@@ -103,10 +86,10 @@ export default function TestPage() {
       {/* 뒤로가기 */}
       <button
         onClick={handleBack}
-        className="mt-10 text-base"
-        style={{ color: 'var(--ink-muted)' }}
+        className="mt-14 text-eyebrow"
+        style={{ color: 'rgba(255,255,255,0.28)', alignSelf: 'flex-start' }}
       >
-        ← 이전 질문
+        ← 이전
       </button>
     </main>
   );

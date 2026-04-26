@@ -5,9 +5,11 @@ import { RefObject, useState } from 'react';
 export default function DownloadButton({
   cardRef,
   constitutionName,
+  gradient,
 }: {
   cardRef: RefObject<HTMLDivElement | null>;
   constitutionName: string;
+  gradient?: string;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -33,10 +35,10 @@ export default function DownloadButton({
     <button
       onClick={handleDownload}
       disabled={loading}
-      className="w-full rounded-2xl py-4 text-lg font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-      style={{ backgroundColor: 'var(--ink)' }}
+      className="rounded-full py-3.5 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+      style={{ background: gradient ?? 'var(--color-text-soft)' }}
     >
-      {loading ? '이미지 생성 중...' : '카드 이미지 저장하기'}
+      {loading ? '저장 중...' : '카드 저장하기'}
     </button>
   );
 }
