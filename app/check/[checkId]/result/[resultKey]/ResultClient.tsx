@@ -1,19 +1,20 @@
 'use client';
 
-import { ConstitutionContent, constitutions, ConstitutionKey } from '@/lib/constitutions';
+import { ConstitutionContent, constitutions } from '@/lib/checks/sasang/content';
+import { ConstitutionKey } from '@/lib/checks/sasang/questions';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import ShareCard from '@/components/ShareCard';
 import DownloadButton from '@/components/DownloadButton';
+import ResultExportButtons from '@/components/ResultExportButtons';
 import { useAppStore } from '@/lib/store';
 import {
-  getAxisWinner, getStrengthTier, getPercentages,
+  getAxisWinner, getStrengthTier, getSasangPercentages,
   axisNarrative, axisEquanimousNarrative,
   isAxisEquanimous, StrengthTier,
-} from '@/lib/scoring';
+} from '@/lib/checks/sasang/strategy';
 
 /* ── 디자인 상수 (모노크롬 — 흰→연회→진회→검정) ── */
-/* 소음=흰, 소양=연회, 태음=진회, 태양=검정 */
 const GRADIENTS: Record<ConstitutionKey, string> = {
   soeum:   '#bdbdbb',
   soyang:  '#6e6e6e',
@@ -21,7 +22,6 @@ const GRADIENTS: Record<ConstitutionKey, string> = {
   taeyang: '#0e0d0c',
 };
 
-/* 분포 바 / 단색 참조 */
 const SOLID: Record<ConstitutionKey, string> = {
   soeum:  '#b0b0ae',
   soyang: '#707070',
@@ -29,7 +29,6 @@ const SOLID: Record<ConstitutionKey, string> = {
   taeyang:'#1c1b1a',
 };
 
-/* 카드 배경 밝기에 따른 텍스트 색상 */
 const TEXT_ON: Record<ConstitutionKey, { main: string; sub: string }> = {
   soeum:   { main: '#111110',             sub: 'rgba(0,0,0,0.50)'   },
   soyang:  { main: '#1a1918',             sub: 'rgba(0,0,0,0.50)'   },
@@ -37,35 +36,40 @@ const TEXT_ON: Record<ConstitutionKey, { main: string; sub: string }> = {
   taeyang: { main: 'rgba(255,255,255,0.92)', sub: 'rgba(255,255,255,0.55)' },
 };
 
-/* 체질 카드 glow (절반 이하, 컬러 없음) */
 const GLOWS: Record<ConstitutionKey, string> = {
   soeum:   '0 0 20px 4px rgba(255,255,255,0.10), 0 0 40px 8px rgba(255,255,255,0.04)',
   soyang:  '0 0 16px 3px rgba(200,200,200,0.07), 0 0 32px 6px rgba(200,200,200,0.03)',
   taeeum:  '0 0 14px 3px rgba(100,100,100,0.06), 0 0 28px 5px rgba(100,100,100,0.03)',
   taeyang: '0 0 14px 3px rgba(255,255,255,0.05), 0 0 28px 5px rgba(255,255,255,0.02)',
 };
+
 const OTHER: Record<ConstitutionKey, ConstitutionKey[]> = {
   taeyang: ['soyang','taeeum','soeum'], soyang: ['taeyang','taeeum','soeum'],
   taeeum:  ['taeyang','soyang','soeum'], soeum: ['taeyang','soyang','taeeum'],
 };
 
 function tierLabel(tier: StrengthTier, p: string, s: string) {
-  if (tier === 'typical') return `전형적인 ${p}`;
-  if (tier === 'leaning') return `${p} 성향이 강함`;
-  return `${p} · ${s} 혼합형`;
+  if (tier === 'typical') return `전형적인 ${p} 경향`;
+  if (tier === 'leaning') return `${p} 성향이 강한 경향`;
+  return `${p} · ${s} 혼합 경향`;
 }
 
 /* ── 메인 ── */
 export default function ResultClient({ constitution: c }: { constitution: ConstitutionContent }) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const scores        = useAppStore((s) => s.scores);
-  const natureScores  = useAppStore((s) => s.natureScores);
-  const emotionScores = useAppStore((s) => s.emotionScores);
-  const natureCount   = useAppStore((s) => s.natureCount);
-  const emotionCount  = useAppStore((s) => s.emotionCount);
+  const run = useAppStore((s) => s.runs['sasang']);
+  const result = run?.result ?? null;
+
+  const scores = result?.scores as Record<ConstitutionKey, number> | null ?? null;
+  const natureScores = (result?.extra?.nature as Record<ConstitutionKey, number>) ?? null;
+  const emotionScores = (result?.extra?.emotion as Record<ConstitutionKey, number>) ?? null;
+  const natureCount = (result?.extra?.natureCount as number) ?? 0;
+  const emotionCount = (result?.extra?.emotionCount as number) ?? 0;
+
   const has = mounted && scores !== null && natureScores !== null && emotionScores !== null;
 
   const tier     = has ? getStrengthTier(scores!) : null;
@@ -73,7 +77,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
   const emoEq    = has ? isAxisEquanimous(emotionScores!, emotionCount) : false;
   const natW     = has && !natEq ? getAxisWinner(natureScores!, natureCount) : null;
   const emoW     = has && !emoEq ? getAxisWinner(emotionScores!, emotionCount) : null;
-  const pcts     = has ? getPercentages(scores!) : null;
+  const pcts     = has ? getSasangPercentages(scores!) : null;
 
   const grad   = GRADIENTS[c.key];
   const glow   = GLOWS[c.key];
@@ -81,7 +85,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
   const textOn = TEXT_ON[c.key];
 
   return (
-    <main className="flex-1 flex flex-col items-center px-5 sm:px-8 py-10 max-w-4xl mx-auto w-full gap-3">
+    <main ref={mainRef} className="flex-1 flex flex-col items-center px-5 sm:px-8 py-10 max-w-4xl mx-auto w-full gap-3">
 
       {/* 1. 히어로 — 흰 카드 */}
       <div
@@ -89,7 +93,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
         style={{ background: '#ffffff', boxShadow: '0 0 40px 8px rgba(255,255,255,0.12)' }}
       >
         <div>
-          <p className="text-eyebrow mb-5" style={{ color: 'rgba(0,0,0,0.45)' }}>당신의 사상체질은</p>
+          <p className="text-eyebrow mb-5" style={{ color: 'rgba(0,0,0,0.45)' }}>나의 사상체질 경향은</p>
           <p style={{ fontSize: '1.0625rem', letterSpacing: '0.1em', marginBottom: '0.5rem', fontWeight: 400, color: 'rgba(0,0,0,0.45)' }}>{c.hanja}</p>
           <p className="text-display mb-4" style={{ color: '#111111' }}>{c.name}</p>
           <p style={{ fontSize: '1.125rem', lineHeight: 1.7, color: 'rgba(0,0,0,0.60)' }}>{c.oneLiner}</p>
@@ -163,7 +167,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
         </div>
       )}
 
-      {/* 3. 핵심 감정 2×1 (통합) */}
+      {/* 3. 핵심 감정 2×1 */}
       <div className="w-full grid grid-cols-2 gap-3">
         <FBlock>
           <Label>平素 · 性</Label>
@@ -247,7 +251,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
           <DownloadButton cardRef={cardRef} constitutionName={c.name} gradient={grad} />
           <button
             onClick={() => {
-              if (navigator.share) { navigator.share({ title: `나는 ${c.name}`, text: c.oneLiner, url: window.location.href }); }
+              if (navigator.share) { navigator.share({ title: `나는 ${c.name} 경향`, text: c.oneLiner, url: window.location.href }); }
               else { navigator.clipboard.writeText(window.location.href); alert('링크가 복사되었습니다!'); }
             }}
             className="pill-block justify-center"
@@ -256,6 +260,9 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
             링크 공유
           </button>
         </div>
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          <ResultExportButtons mainRef={mainRef} constitutionName={c.name} />
+        </div>
       </div>
 
       {/* 9. 다른 체질 */}
@@ -263,18 +270,24 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
         <p className="text-eyebrow text-center mb-3">배우자·가족도 해보세요</p>
         <div className="grid grid-cols-3 gap-2 mb-2">
           {OTHER[c.key].map((key) => (
-            <Link key={key} href={`/result/${key}`} className="rounded-[0.75rem] p-4 text-center floating-block transition-opacity hover:opacity-80">
+            <Link key={key} href={`/check/sasang/result/${key}`} className="rounded-[0.75rem] p-4 text-center floating-block transition-opacity hover:opacity-80">
               <p className="text-eyebrow mb-1">{constitutions[key].hanja}</p>
               <p className="font-medium" style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.85)' }}>{constitutions[key].name}</p>
             </Link>
           ))}
         </div>
-        <Link href="/onboarding" className="pill-block w-full justify-center">처음부터 다시 하기</Link>
+        <Link href="/check/sasang/onboarding" className="pill-block w-full justify-center">처음부터 다시 하기</Link>
+      </div>
+
+      {/* 다른 체크리스트 */}
+      <div className="w-full">
+        <Link href="/" className="pill-block w-full justify-center">다른 건강체크도 해보기</Link>
       </div>
 
       {/* 출처 */}
-      <p className="text-center py-4" style={{ fontSize: '0.875rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.45)' }}>
-        {c.classicQuoteKorean}<br />이 결과는 의학적 진단이 아닌 자가 참고용 분석입니다.
+      <p className="text-center py-4" style={{ fontSize: '0.9375rem', lineHeight: 1.8, color: 'rgba(255,255,255,0.45)' }}>
+        {c.classicQuoteKorean}<br />
+        <span style={{ fontSize: '0.875rem' }}>MBTI처럼, 정답이 아니라 경향입니다. 진료를 대체하지 않아요.</span>
       </p>
     </main>
   );
@@ -282,9 +295,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
 
 /* ── 공통 UI ── */
 function FBlock({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`floating-block ${className}`}>{children}</div>
-  );
+  return <div className={`floating-block ${className}`}>{children}</div>;
 }
 
 function Label({ children }: { children: React.ReactNode }) {
@@ -301,7 +312,7 @@ function Label({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Tags({ items, color }: { items: string[]; color?: string }) {
+function Tags({ items }: { items: string[] }) {
   return (
     <div className="flex flex-wrap gap-1.5 mt-2">
       {items.map((item) => (
@@ -311,7 +322,7 @@ function Tags({ items, color }: { items: string[]; color?: string }) {
           style={{
             fontSize: '1rem',
             border: '1px solid rgba(255,255,255,0.40)',
-            color: color ?? 'rgba(255,255,255,0.80)',
+            color: 'rgba(255,255,255,0.80)',
             background: 'transparent',
             fontWeight: 500,
           }}
@@ -342,7 +353,7 @@ function SegBar({ pcts, primary }: { pcts: Record<ConstitutionKey, number>; prim
   return (
     <div className="w-full flex rounded-full overflow-hidden gap-px mt-3" style={{ height: '4px' }}>
       {sorted.map((key) => (
-        <div key={key} style={{ width: `${pcts[key]}%`, background: key === primary ? '#ffffff' : 'rgba(255,255,255,0.35)', opacity: key === primary ? 1 : 1, minWidth: pcts[key] > 0 ? '3px' : 0 }} />
+        <div key={key} style={{ width: `${pcts[key]}%`, background: key === primary ? '#ffffff' : 'rgba(255,255,255,0.35)', minWidth: pcts[key] > 0 ? '3px' : 0 }} />
       ))}
     </div>
   );

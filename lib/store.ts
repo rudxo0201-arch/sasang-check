@@ -1,55 +1,74 @@
 'use client';
 
 import { create } from 'zustand';
-import { UserProfile } from './questions';
-import { ConstitutionKey } from './constitutions';
-import { AxisScores } from './scoring';
+import { persist } from 'zustand/middleware';
+import { UserProfile } from './engine/profile';
+import { EngineResult } from './engine/types';
 
-interface AppState {
+export interface RunState {
+  checkId: string;
   profile: UserProfile | null;
   answers: Record<string, number>;
-  result: ConstitutionKey | null;
-  scores: Record<ConstitutionKey, number> | null;
-  natureScores: Record<ConstitutionKey, number> | null;
-  emotionScores: Record<ConstitutionKey, number> | null;
-  natureCount: number;
-  emotionCount: number;
-
-  setProfile: (p: UserProfile) => void;
-  setAnswer: (questionId: string, optionIndex: number) => void;
-  setResult: (key: ConstitutionKey, axis: AxisScores) => void;
-  reset: () => void;
+  result: EngineResult<string> | null;
 }
 
-export const useAppStore = create<AppState>((set) => ({
-  profile: null,
-  answers: {},
-  result: null,
-  scores: null,
-  natureScores: null,
-  emotionScores: null,
-  natureCount: 0,
-  emotionCount: 0,
+interface AppState {
+  runs: Record<string, RunState>;
+  setProfile: (checkId: string, profile: UserProfile) => void;
+  setAnswer: (checkId: string, questionId: string, optionIndex: number) => void;
+  setResult: (checkId: string, result: EngineResult<string>) => void;
+  resetRun: (checkId: string) => void;
+  resetAll: () => void;
+}
 
-  setProfile: (p) => set({ profile: p }),
-  setAnswer: (questionId, optionIndex) =>
-    set((state) => ({ answers: { ...state.answers, [questionId]: optionIndex } })),
-  setResult: (key, axis) => set({
-    result: key,
-    scores: axis.total,
-    natureScores: axis.nature,
-    emotionScores: axis.emotion,
-    natureCount: axis.natureCount,
-    emotionCount: axis.emotionCount,
-  }),
-  reset: () => set({
-    profile: null,
-    answers: {},
-    result: null,
-    scores: null,
-    natureScores: null,
-    emotionScores: null,
-    natureCount: 0,
-    emotionCount: 0,
-  }),
-}));
+function emptyRun(checkId: string): RunState {
+  return { checkId, profile: null, answers: {}, result: null };
+}
+
+export const useAppStore = create<AppState>()(
+  persist(
+    (set) => ({
+      runs: {},
+
+      setProfile: (checkId, profile) =>
+        set((state) => ({
+          runs: {
+            ...state.runs,
+            [checkId]: { ...(state.runs[checkId] ?? emptyRun(checkId)), profile },
+          },
+        })),
+
+      setAnswer: (checkId, questionId, optionIndex) =>
+        set((state) => {
+          const run = state.runs[checkId] ?? emptyRun(checkId);
+          return {
+            runs: {
+              ...state.runs,
+              [checkId]: { ...run, answers: { ...run.answers, [questionId]: optionIndex } },
+            },
+          };
+        }),
+
+      setResult: (checkId, result) =>
+        set((state) => ({
+          runs: {
+            ...state.runs,
+            [checkId]: { ...(state.runs[checkId] ?? emptyRun(checkId)), result },
+          },
+        })),
+
+      resetRun: (checkId) =>
+        set((state) => {
+          const { [checkId]: _removed, ...rest } = state.runs;
+          return { runs: rest };
+        }),
+
+      resetAll: () => set({ runs: {} }),
+    }),
+    {
+      name: 'self-check-runs',
+      version: 1,
+      partialize: (state) => ({ runs: state.runs }),
+    },
+  ),
+);

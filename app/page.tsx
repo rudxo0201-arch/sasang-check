@@ -1,27 +1,14 @@
 import Link from 'next/link';
+import { getLiveChecks } from '@/lib/checks';
 
-/* 소음=흰, 소양=연회, 태음=진회, 태양=검정 */
-const CARDS = [
-  { name: '소음인', hanja: '少陰人', task: '기쁨의 기복을 다스리는 사람',
-    bg: '#484848', glow: '0 0 20px 4px rgba(255,255,255,0.05)',
-    textMain: 'rgba(255,255,255,0.92)', textSub: 'rgba(255,255,255,0.52)' },
-  { name: '소양인', hanja: '少陽人', task: '슬픔을 다스리는 사람',
-    bg: '#333333', glow: '0 0 14px 3px rgba(200,200,200,0.04)',
-    textMain: 'rgba(255,255,255,0.92)', textSub: 'rgba(255,255,255,0.52)' },
-  { name: '태음인', hanja: '太陰人', task: '탐닉을 다스리는 사람',
-    bg: '#222222', glow: '0 0 12px 2px rgba(100,100,100,0.04)',
-    textMain: 'rgba(255,255,255,0.92)', textSub: 'rgba(255,255,255,0.52)' },
-  { name: '태양인', hanja: '太陽人', task: '분노를 다스리는 사람',
-    bg: '#080808', glow: '0 0 12px 2px rgba(255,255,255,0.03)',
-    textMain: 'rgba(255,255,255,0.92)', textSub: 'rgba(255,255,255,0.52)' },
-];
+export default function HubPage() {
+  const checks = getLiveChecks();
 
-export default function LandingPage() {
   return (
     <main className="flex-1 flex flex-col w-full max-w-5xl mx-auto px-8 sm:px-14 py-14">
 
-      {/* 히어로 그룹 */}
-      <div className="mb-10 mt-16">
+      {/* 히어로 */}
+      <div className="mb-8 mt-16">
         <span style={{
           fontSize: '0.875rem',
           letterSpacing: '0.06em',
@@ -31,70 +18,63 @@ export default function LandingPage() {
           borderRadius: '999px',
           padding: '0.3em 0.9em',
           display: 'inline-block',
-          marginBottom: '0.75rem',
-        }}>이제마의 사상의학</span>
-        <h1 className="text-display whitespace-nowrap">
-          사상체질 건강체크
+          marginBottom: '1rem',
+        }}>한의 건강체크</span>
+        <h1 className="text-display">
+          건강 셀프체크
         </h1>
       </div>
 
-      {/* 서브텍스트 */}
-      <div className="flex justify-start mb-16">
-        <div style={{ maxWidth: '26rem' }} className="text-left">
-          <p className="mb-4 leading-relaxed" style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.55)', fontWeight: 400 }}>
-            사람마다 태어날 때부터 장부의 크고 작음이 다릅니다.
-            이제마 선생은 이것을 다스리는 것이 평생의 수양이자 건강의 근본이라 했습니다.
-          </p>
-          <p style={{ fontSize: '1.125rem', letterSpacing: '-0.05em', color: 'rgba(255,255,255,0.45)' }}>
-            태양인 · 소양인 · 태음인 · 소음인
-          </p>
-        </div>
+      <div className="mb-14" style={{ maxWidth: '28rem' }}>
+        <p style={{ fontSize: '1.0625rem', lineHeight: 1.75, color: 'rgba(255,255,255,0.55)' }}>
+          MBTI처럼, 재미로 하되 의미는 있는 한의학 건강체크.
+          꾸준히 쌓아가는 나만의 건강 기록.
+        </p>
       </div>
 
-      {/* 구분선 */}
       <div className="w-full mb-10" style={{ height: '1px', background: 'rgba(255,255,255,0.10)' }} />
 
-      {/* 체질 카드 — white-block 스타일 + 체질 컬러 배경 */}
-      <div className="grid grid-cols-2 gap-3 mb-10">
-        {CARDS.map((c) => (
-          <div
-            key={c.name}
-            className="rounded-[1rem] p-6 text-white relative overflow-hidden"
-            style={{
-              background: 'transparent',
-              boxShadow: c.glow,
-              border: '2px solid rgba(255,255,255,0.85)',
-            }}
+      {/* 체크리스트 그리드 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
+        {checks.map((check) => (
+          <Link
+            key={check.id}
+            href={`/check/${check.id}`}
+            className="floating-block group flex flex-col gap-3 transition-all hover:border-white/30"
+            style={{ padding: '1.75rem' }}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.125rem' }}>
-                <p style={{ fontSize: '1rem', letterSpacing: '0.18em', textTransform: 'uppercase', position: 'relative', color: c.textSub, lineHeight: 1, marginBottom: '4px', transform: 'translateY(10px)' }}>
-                  {c.hanja}
+            <div>
+              {check.hubCard.hanja && (
+                <p style={{ fontSize: '0.875rem', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.38)', marginBottom: '0.375rem' }}>
+                  {check.hubCard.hanja}
                 </p>
-                <p style={{ fontSize: '1.875rem', fontWeight: 700, position: 'relative', color: c.textMain }}>{c.name}</p>
-              </div>
-              <p style={{ fontSize: '1rem', lineHeight: 1.6, position: 'relative', color: c.textSub }}>{c.task}</p>
+              )}
+              <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'rgba(255,255,255,0.92)', marginBottom: '0.5rem' }}>
+                {check.hubCard.title}
+              </p>
+              <p style={{ fontSize: '0.9375rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.52)' }}>
+                {check.hubCard.subtitle}
+              </p>
             </div>
-          </div>
+            <div className="flex items-center justify-between mt-1">
+              <span style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.35)' }}>
+                약 {check.hubCard.estimatedMinutes}분 · {check.questions.length}문항
+              </span>
+              <span
+                className="opacity-0 group-hover:opacity-60 transition-opacity"
+                style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.70)' }}
+              >
+                시작 →
+              </span>
+            </div>
+          </Link>
         ))}
       </div>
 
-      {/* CTA */}
-      <div className="flex items-center justify-end">
-        <Link
-          href="/onboarding"
-          className="pill-block"
-          style={{ color: 'rgba(255,255,255,0.80)' }}
-        >
-          나의 체질 알아보기
-          <span style={{ fontSize: '1rem', opacity: 0.6 }}>→</span>
-        </Link>
-      </div>
-
       {/* 하단 */}
-      <div className="mt-16 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-        <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.45)', letterSpacing: '0.02em' }}>
-          * 이 결과는 의학적 진단이 아닌 자가 참고용 분석입니다. 정확한 체질 판별과 치료는 한의사 진료가 필요합니다.
+      <div className="mt-8 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <p style={{ fontSize: '0.9375rem', lineHeight: 1.75, color: 'rgba(255,255,255,0.38)' }}>
+          MBTI처럼, 정답이 아니라 경향입니다. 진료를 대체하지 않아요.
         </p>
       </div>
     </main>
