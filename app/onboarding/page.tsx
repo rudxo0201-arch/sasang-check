@@ -7,6 +7,16 @@ import { UserProfile } from '@/lib/questions';
 
 type Step = 'gender' | 'age' | 'family';
 
+const AGE_OPTIONS: { label: string; val: UserProfile['ageGroup'] }[] = [
+  { label: '20대', val: '20s' },
+  { label: '30대', val: '30s' },
+  { label: '40대', val: '40s' },
+  { label: '50대', val: '50s' },
+  { label: '60대', val: '60s' },
+  { label: '70대', val: '70s' },
+  { label: '80대 이상', val: '80plus' },
+];
+
 export default function OnboardingPage() {
   const router = useRouter();
   const setProfile = useAppStore((s) => s.setProfile);
@@ -46,10 +56,9 @@ export default function OnboardingPage() {
 
       {step === 'age' && (
         <Step label="02 / 03" question="연령대를 알려주세요.">
-          {['40대', '50대', '60대', '70대 이상', '그 외 (30대 이하)'].map((label, i) => {
-            const vals = ['40s', '50s', '60s', '70plus', 'other'] as const;
-            return <Opt key={label} onClick={() => handleAge(vals[i])}>{label}</Opt>;
-          })}
+          {AGE_OPTIONS.map(({ label, val }) => (
+            <Opt key={val} onClick={() => handleAge(val)}>{label}</Opt>
+          ))}
         </Step>
       )}
 

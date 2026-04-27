@@ -45,7 +45,7 @@ export default function LandingPage() {
             사람마다 태어날 때부터 장부의 크고 작음이 다릅니다.
             이제마 선생은 이것을 다스리는 것이 평생의 수양이자 건강의 근본이라 했습니다.
           </p>
-          <p style={{ fontSize: '1.125rem', letterSpacing: '0.10em', color: 'rgba(255,255,255,0.45)' }}>
+          <p style={{ fontSize: '1.125rem', letterSpacing: '-0.05em', color: 'rgba(255,255,255,0.45)' }}>
             태양인 · 소양인 · 태음인 · 소음인
           </p>
         </div>
@@ -68,7 +68,7 @@ export default function LandingPage() {
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.125rem' }}>
-                <p style={{ fontSize: '1rem', letterSpacing: '0.18em', textTransform: 'uppercase', position: 'relative', color: c.textSub, marginTop: '2px' }}>
+                <p style={{ fontSize: '1rem', letterSpacing: '0.18em', textTransform: 'uppercase', position: 'relative', color: c.textSub, lineHeight: 1, marginBottom: '4px', transform: 'translateY(10px)' }}>
                   {c.hanja}
                 </p>
                 <p style={{ fontSize: '1.875rem', fontWeight: 700, position: 'relative', color: c.textMain }}>{c.name}</p>
