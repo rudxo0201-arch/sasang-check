@@ -163,12 +163,20 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
         </div>
       )}
 
-      {/* 3. 핵심 감정 2×2 */}
+      {/* 3. 핵심 감정 2×1 (통합) */}
       <div className="w-full grid grid-cols-2 gap-3">
-        <FBlock><Label>자연스러운 감정</Label><span className="inline-block mt-2 mb-3 px-4 py-1.5 rounded-full text-base font-semibold" style={{ border: '1.5px solid rgba(255,255,255,0.70)', color: 'rgba(255,255,255,0.92)' }}>{c.preferredEmotion.name}</span><p className="text-caption leading-relaxed">{c.preferredEmotion.description}</p></FBlock>
-        <FBlock><Label>다스려야 할 감정</Label><span className="inline-block mt-2 mb-3 px-4 py-1.5 rounded-full text-base font-semibold" style={{ border: '1.5px solid rgba(255,255,255,0.70)', color: 'rgba(255,255,255,0.92)' }}>{c.difficultEmotion.name}</span><p className="text-caption leading-relaxed">{c.difficultEmotion.description}</p></FBlock>
-        <FBlock><Label>平素 · 性</Label><p className="font-medium mt-2 mb-1" style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.88)' }}>{c.nature.korean}</p><p className="text-caption leading-relaxed">{c.nature.explanation}</p></FBlock>
-        <FBlock><Label>刺戟 · 情</Label><p className="font-medium mt-2 mb-1" style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.88)' }}>{c.emotion.korean}</p><p className="text-caption leading-relaxed">{c.emotion.explanation}</p></FBlock>
+        <FBlock>
+          <Label>平素 · 性</Label>
+          <span className="inline-block mt-2 mb-2 px-4 py-1.5 rounded-full text-base font-semibold" style={{ border: '1.5px solid rgba(255,255,255,0.70)', color: 'rgba(255,255,255,0.92)' }}>{c.preferredEmotion.name}</span>
+          <p className="font-medium mb-1" style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.60)' }}>{c.nature.korean}</p>
+          <p className="text-caption leading-relaxed">{c.nature.explanation}</p>
+        </FBlock>
+        <FBlock>
+          <Label>刺戟 · 情</Label>
+          <span className="inline-block mt-2 mb-2 px-4 py-1.5 rounded-full text-base font-semibold" style={{ border: '1.5px solid rgba(255,255,255,0.70)', color: 'rgba(255,255,255,0.92)' }}>{c.difficultEmotion.name}</span>
+          <p className="font-medium mb-1" style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.60)' }}>{c.emotion.korean}</p>
+          <p className="text-caption leading-relaxed">{c.emotion.explanation}</p>
+        </FBlock>
       </div>
 
       {/* 4. 평생 과제 */}
@@ -184,7 +192,7 @@ export default function ResultClient({ constitution: c }: { constitution: Consti
       <div className="w-full grid grid-cols-2 gap-3">
         <FBlock><Label>잘 맞는 음식</Label><Tags items={c.foods.good} /></FBlock>
         <FBlock><Label>조심할 음식</Label><Tags items={c.foods.avoid} /></FBlock>
-        <FBlock><Label>맞는 운동</Label><Tags items={c.exercises} /></FBlock>
+        <FBlock><Label>맞는 운동</Label><ul className="mt-2 space-y-1">{c.exercises.map((e) => <li key={e} className="text-caption leading-relaxed" style={{ paddingLeft: '1em', textIndent: '-1em' }}>· {e}</li>)}</ul></FBlock>
         <FBlock>
           <Label>주의 신체 신호</Label>
           <ul className="mt-2 space-y-1.5">
